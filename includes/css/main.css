@@ -1,0 +1,282 @@
+/* For older browsers */
+header, section, footer, aside, nav, main, article, figure { display: block; }
+
+
+/* Universal */
+body { background-color: #036; font-family: Arial, Helvetica, sans-serif; }
+a:link { color: #9ACD32; text-decoration: none; }
+a:hover { color: #93C; text-decoration: underline; }
+input,select { color: #000; text-align: center; font-size: 10px; }
+label {font-size: 12px; margin-bottom: 0; margin-top: 0;}
+
+
+/* Classes */
+.centered-container { width: 100%; margin: auto; }
+.sndparam-value { text-align: center; }
+.sndparam-header { font-weight: bold; }
+.style5 { color: rgb(0, 0, 0); font-weight: bold; font-size: 12px; }
+.style7 { color: #FF0; font-size: 10px; }
+.style9 { color: #FFF; font-size: 10px; text-align: center; display: block; }
+.style11 { color:  rgb(0, 0, 0); font-size: 11px;}
+.disabled { font-style: italic; color: #CCC; }
+.plotoption-boxes {
+  border: 2px solid #B8B8B8;
+  border-radius: 20px;
+  background-color: #888;
+  padding: 5px;
+  margin: 25px auto;
+}
+.optionbox {
+  text-align: center;
+}
+
+/* SVG Title */
+#svg-title {
+  font-size: 30px;
+  font-weight: bold;
+}
+
+/* Main Content Wrapper */
+#contentwrapper { width: 100%; }
+
+/* Navigation Bar */
+#secondbar {padding: 0rem 1rem;}
+
+
+/* Left Sidebar */
+#leftsidebar {
+  float: left;
+  width: 300px;
+  margin-right: -100%;
+  text-align: left;
+  background-color: #036;
+  padding: 0;
+  overflow: hidden;
+  position: relative;
+  display: inline;
+  vertical-align: top;
+  border: 5px solid white;
+}
+
+#rightsidebar {
+  float: left;
+  width: 300px;
+  text-align: left;
+  background-color: #036;
+  padding: 0;
+  overflow: hidden;
+  position: relative;
+  display: inline;
+  vertical-align: top;
+  border: 5px solid white;
+  color: white;
+}
+
+#spcbanner {
+  width: 100%;
+  float: left;
+  text-align: center;
+  margin: 0 auto 20px auto;
+  padding: 10px 0;
+  font-weight: bold;
+  font-size: 18px;
+  background-image: url(../imgs/NOAA_trans.png), url(../imgs/NWS_trans.png);
+  background-position: bottom left, bottom right;
+  background-size: 50px, 50px;
+  background-repeat: no-repeat;
+  background-color: white;
+}
+
+#plotoptions {
+  color: #FFF;
+  font-size: 12px;
+  text-align: center;
+  font-weight: bold;
+  padding: 5px 15px;
+}
+
+#spctext {
+  font-size: 10pt;
+  text-decoration: none;
+  padding: 10px 0;
+}
+
+#plotbutton {
+  background: none;
+  border: none;
+  color: #FFF;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+#exp1 { display: block; }
+#plotinfo {
+  color: #FFF;
+  font-size: 12;
+  text-align: center;
+  border-top: solid 2px white;
+  border-bottom: solid 2px white;
+  padding: 5px 0;
+  margin-bottom: 5px;
+}
+
+#movave, #plotsubmit, #dateplot { margin-top: 0px; }
+
+
+/* Main Plot Area */
+main { width: 100%; border: 0.1em solid #DDD; height: 1000px;}
+
+#spclogo {
+  background-image: url(../imgs/spclogo.jpg);
+  background-repeat: no-repeat;
+  background-position: center;
+  margin: 25px auto 0 auto;
+  display: block;
+}
+
+#svg-container {
+  width: 100%;
+}
+
+#svg-background {
+  background-color: #FFF;
+  box-shadow: 0px 0px 0px 5px #999;
+  border-radius: 2px;
+  width: 100%;
+  margin: 15px 0px;
+}
+
+/* SVG Plot */
+.axis path, .axis line { fill: none; stroke: #000; shape-rendering: crispEdges; }
+.axis path { display: none; }
+.axis line { stroke: #CCC; }
+.line { fill: none; }
+.area { fill: maroon; fill-opacity: 0.2; }
+
+/* SVG Line/Path Strokes */
+#p00 { stroke: blue; stroke-width: 0.75; }
+#p01 { stroke: darkblue; stroke-width: 2; }
+#p10 { stroke: #0AA; stroke-width: 2; }
+#p50 { stroke: black; stroke-width: 2; }
+#p90 { stroke: orange; stroke-width: 2; }
+#p99 { stroke: darkred; stroke-width: 2; }
+#p100 { stroke: red; stroke-width: 0.75; }
+#mean {stroke: #333; stroke-width: 0.75; }
+#p25, #p75 { stroke: maroon; stroke-width: 2; }
+
+/* SVG Title and Labels */
+#title { font-size: 24px; }
+#yLabel { font-size: 18px; }
+
+/* SVG Bounding Box */
+#bounding-box { stroke: #000;
+  fill: none;
+  stroke-width: 2;
+  pointer-events: all;
+}
+
+
+/* Legend */
+#legend {
+  display: inline-block;
+  background-color: #FFF;
+  text-align: center;
+  width: 100%;
+  height: 100px;
+  margin-bottom: 25px;
+  font-weight: bold;
+}
+
+/* Legend Text */
+#p00L { color: blue; }
+#p01L { color: darkblue; }
+#p10L { color: #0AA; }
+#p25L, #p75L { color: maroon; }
+#p50L { color: black; }
+#p90L { color: orange; }
+#p99L { color: darkred; }
+#p100L { color: red; }
+#meanL { color: #333; }
+
+#leg-left { padding-left: 50px; text-align: left; }
+#leg-center { text-align: center; }
+#leg-right { padding-right: 50px; text-align: right; }
+#dateT { font-size: 24px; }
+
+#por, #por-text { margin: 25px auto 25px auto; text-align: center; font-size: 11px; }
+#por { font-weight: bold; }
+#por-text { font-weight: normal; }
+
+
+/* Plotting the Observed Sounding */
+@-webkit-keyframes blackWhitePulse {
+  0%, 100% { fill: #000; }
+  13%, 88% { fill: #444; }
+  25%, 75% { fill: #888; }
+  38%, 68% { fill: #CCC; }
+  50% { fill: #FFF; }
+}
+
+@-moz-keyframes blackWhitePulse {
+  0%, 100% { fill: #000; }
+  13%, 88% { fill: #444; }
+  25%, 75% { fill: #888; }
+  38%, 68% { fill: #CCC; }
+  50% { fill: #FFF; }
+}
+
+@keyframes blackWhitePulse {
+  0%, 100% { fill: #000; }
+  13%, 88% { fill: #444; }
+  25%, 75% { fill: #888; }
+  38%, 68% { fill: #CCC; }
+  50% { fill: #FFF; }
+}
+
+.obs {
+  stroke: black;
+  stroke-width: 1px;
+  -webkit-animation: blackWhitePulse 1s infinite;
+  -moz-animation: blackWhitePulse 1s infinite;
+  animation: blackWhitePulse 1s infinite;
+}
+
+#tooltip {
+  font-size: 8pt;
+  font-weight: bold;
+  text-align: center;
+  color: #DDD;
+  line-height: 1.5;
+}
+
+#toolval { color: #FF0; }
+
+.d3-tip {
+  line-height: 1;
+  font-weight: bold;
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  border-radius: 2px;
+}
+
+/* Creates a small triangle extender for the tooltip */
+.d3-tip:after {
+  box-sizing: border-box;
+  display: inline;
+  font-size: 10px;
+  width: 100%;
+  line-height: 1;
+  color: rgba(0, 0, 0, 0.8);
+  content: "\25BC";
+  position: absolute;
+  text-align: center;
+}
+
+/* Style northward tooltips differently */
+.d3-tip.n:after {
+  margin: -1px 0 0 0;
+  top: 100%;
+  left: 0;
+}

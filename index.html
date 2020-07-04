@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Storm Prediction Center Sounding Climatology Page</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+  <link rel="stylesheet" type="text/css" href="includes/css/main.css">
+
+  <!-- GSA-sanctioned Google Analytics -->
+  <script type="text/javascript" async="true" id="_fed_an_ua_tag" src="https://dap.digitalgov.gov/Universal-Federated-Analytics-Min.js?agency=DOC&subagency=SPC&pua=UA-52727918-1"></script>
+
+</head>
+<body>
+  <div id="contentwrapper">
+    <nav id="topbar" class="navbar navbar-dark bg-dark">
+      <div class="navbar-nav flex-row mr-auto">
+      <a class="navbar-brand" href="#">
+        <img src="./includes/imgs/NOAA_trans.png" width="30" height="30" alt="">
+      </a>
+      <a class="navbar-brand" href="#">
+        <img src="./includes/imgs/spclogo_trans.png" width="30" alt="">
+      </a>
+      <div class="navbar-brand" href="#">Sounding Climatology v2</div>
+      </div>
+      <span class="navbar-text">Storm Prediction Center, Norman OK</span>
+    </nav>
+    <nav id="secondbar" class="navbar navbar-light bg-light">
+      <div class="optionbox" id="soundingtimes">
+        <span class="style5">Select Sounding Times</span>
+        <br />
+        <input type="radio" name="sndtime" id="zero" value="00Z" />
+        <label for="zero">00Z&nbsp;&nbsp;</label>
+        <input type="radio" name="sndtime" id="twelve" value="12Z" />
+        <label for="twelve">12Z&nbsp;&nbsp;</label>
+        <input type="radio" checked name="sndtime" id="both" value="all" />
+        <label for="both">All&nbsp;&nbsp;</label>
+      </div>
+      <div class="optionbox" id="stationselect">
+        <label class="style5" for="stn">Select Station</label>
+        <br />
+        <select id="stn">
+          <option value="OUN">Norman, OK</option>
+        </select>
+      </div>
+
+      <div class="optionbox" id="parameterselect">
+        <label class="style5" for="sndparam">Select Display Parameter</label>
+        <br />
+        <select id="sndparam">
+          <option value="PASS">---Mandatory Level Data---</option>
+          <option value="TEMP925" unit="C">925 mb Temperature (C)</option>
+          <option value="DEWPOINT925" unit="C">925 mb Dewpoint (C)</option>
+          <option value="MIXRATIO925" unit="g/kg">925 mb Mixing Ratio (g/kg)</option>
+          <option value="WINDSPD925" unit="kts">925 mb Wind Speed (kts)</option>
+          <option value="HEIGHT850" unit="m">850 mb Height (m)</option>
+          <option value="TEMP850" unit="C">850 mb Temperature (C)</option>
+          <option value="DEWPOINT850" unit="C">850 mb Dewpoint (C)</option>
+          <option value="MIXRATIO850" unit="g/kg">850 mb Mixing Ratio (g/kg)</option>
+          <option value="WINDSPD850" unit="kts">850 mb Wind Speed (kts)</option>
+          <option value="HEIGHT700" unit="m">700 mb Height (m)</option>
+          <option value="TEMP700" unit="C">700 mb Temperature (C)</option>
+          <option value="DEWPOINT700" unit="C">700 mb Dewpoint (C)</option>
+          <option value="MIXRATIO700" unit="g/kg">700 mb Mixing Ratio (g/kg)</option>
+          <option value="WINDSPD700" unit="kts">700 mb Wind Speed (kts)</option>
+          <option value="HEIGHT500" unit="m">500 mb Height (m)</option>
+          <option value="TEMP500" unit="C">500 mb Temperature (C)</option>
+          <option value="DEWPOINT500" unit="C">500 mb Dewpoint (C)</option>
+          <option value="MIXRATIO500" unit="g/kg">500 mb Mixing Ratio (g/kg)</option>
+          <option value="WINDSPD500" unit="kts">500 mb Wind Speed (kts)</option>
+          <option value="HEIGHT300" unit="m">300 mb Height (m)</option>
+          <option value="TEMP300" unit="C">300 mb Temperature (C)</option>
+          <option value="WINDSPD300" unit="kts">300 mb Wind Speed (kts)</option>
+          <option value="HEIGHT250" unit="m">250 mb Height (m)</option>
+          <option value="TEMP250" unit="C">250 mb Temperature (C)</option>
+          <option value="WINDSPD250" unit="kts">250 mb Wind Speed (kts)</option>
+          <option value="PASS">---Instability Parameters---</option>
+          <option value="MLCAPE" unit="J/kg">Mixed Layer CAPE (J/kg)</option>
+          <option value="MLCIN" unit="J/kg">Mixed Layer CIN (J/kg)</option>
+          <option value="MLLCL" unit="m">Mixed Layer LCL (m)</option>
+          <option value="MLLFC" unit="m">Mixed Layer LFC (m)</option>
+          <option value="MLLI" unit="C">Mixed Layer LI (C)</option>
+          <option value="MUCAPE" unit="J/kg">Most Unstable CAPE (J/kg)</option>
+          <option value="MUCIN" unit="J/kg">Most Unstable CIN (J/kg)</option>
+          <option value="MULCL" unit="m">Most Unstable LCL (m)</option>
+          <option value="MULFC" unit="m">Most Unstable LFC (m)</option>
+          <option value="MULI" unit="C">Most Unstable LI (C)</option>
+          <option value="SBCAPE" unit="J/kg">Surface Based CAPE (J/kg)</option>
+          <option value="SBCIN" unit="J/kg">Surface Based CIN (J/kg)</option>
+          <option value="SBLCL" unit="m">Surface Based LCL (m)</option>
+          <option value="SBLFC" unit="m">Surface Based LFC (m)</option>
+          <option value="SBLI" unit="C">Surface Based LI (C)</option>
+          <option value="CONVTEMP" unit="F">Convective Temperature (F)</option>
+          <option value="MLCAPE03" unit="J/kg">Mixed Layer 0-3 km CAPE (J/kg)</option>
+          <option value="DCAPE" unit="J/kg">Downdraft CAPE (DCAPE) (J/kg)</option>
+          <option value="LAPSERATE75" unit="C/km">700-500 mb Lapse Rate (C/km)</option>
+          <option value="LAPSERATE85" unit="C/km">850-500 mb Lapse Rate (C/km)</option>
+          <option value="LAPSERATE36" unit="C/km">3-6 km AGL Lapse Rate (C/km)</option>
+          <option value="LAPSERATE03" unit="C/km">0-3 km AGL Lapse Rate (C/km)</option>
+          <option value="PASS">---Kinematic Parameters---</option>
+          <option value="SHEAR06" unit="kts">0-6 km AGL Bulk Wind Shear (kts)</option>
+          <option value="SHEAR03" unit="kts">0-3 km AGL Bulk Wind Shear(kts)</option>
+          <option value="SHEAR01" unit="kts">0-1 km AGL Bulk Wind Shear (kts)</option>
+          <option value="EFF_SRH" unit="m^2/s^2" disabled>Effective SRH (m^2/s^2)</option>
+          <option value="SRH03" unit="m^2/s^2">0-3 km SRH (m^2/s^2)</option>
+          <option value="SRH01" unit="m^2/s^2">0-1 km SRH (m^2/s^2)</option>
+          <option value="SFC_UWND" unit="kts (U Component)">Surface Wind Speed (U component; kts)</option>
+          <option value="SFC_VWND" unit="kts (V Component)">Surface Wind Speed (V component; kts)</option>
+          <option value="PASS">---Moisture Parameters---</option>
+          <option selected="selected" value="PW" unit="in">Precipitable Water (inches)</option>
+          <option value="MIXRATIO03KM" unit="g/kg">0-3 km Mixing Ratio (g/kg)</option>
+          <option value="MIXRATIO01KM" unit="g/kg">0-1 km Mixing Ratio (g/kg)</option>
+          <option value="MIXRATIOSFC850" unit="g/kg">Surface-850 mb Layer Mixing Ratio (g/kg)</option>
+          <option value="SFC_TD" unit="F">Surface Dewpoint (F) </option>
+          <option value="PASS">---Fire Weather Parameters---</option>
+          <option value="FOSBERG" unit="">Fosberg Index</option>
+          <option value="SFC_RH" unit="%">Surface Relative Humidity (%)</option>
+          <option value="SFC_T" unit="F">Surface Temperature (F)</option>
+          <option value="SFCWINDSPD" unit="kts">Surface Wind Speed (kts)</option>
+          <option value="PASS">---Other Derived Parameters---</option>
+          <option value="STP_FIX" unit="">Fixed-Layer Sig-Tornado Parameter</option>
+          <option value="STP_EFF" unit="" disabled>Effective-Layer Sig-Tornado Parameter</option>
+          <option value="SCP_EFF" unit="" disabled>Effective-Layer SCP</option>
+          <option value="SHIP" unit="">Significant Hail Parameter</option>
+          <option value="WBZHEIGHT" unit="ft">Wet Bulb Zero Height (ft)</option>
+          <option value="MELTINGLVL" unit="ft">Melting Level (ft)</option>
+        </select>
+      </div>
+      <div class="optionbox" id="raw-vs-filter">
+        <span class="style5">Raw vs Filtered Fields</span>
+        <br />
+        <input type="radio" name="dtype" id="raw" value="raw" />
+        <label for="raw">Raw&nbsp;&nbsp;&nbsp;&nbsp;</label>
+        <input type="radio" name="dtype" id="filtered" value="filtered" checked />
+        <label for="filtered">Filtered</label>
+      </div>
+      <div class="optionbox" id="latestobs">
+        <span class="style5">
+          <input type="checkbox" name="observed" id="observed" value="ObsYes" />
+          <label for="observed">Latest 00/12 UTC Sounding</label>
+          
+        </span>
+        <br />
+        <span class="style11">
+          (Updated 02/14 UTC)
+        </span>
+      </div>
+      <div class="optionbox">
+        <div class="style5">Custom Plot Options</div>
+        <div id="exp1">
+          <label for="ymax">Max Value:</label>
+          <input type="text" name="ymax" id="ymax" size="5" />
+          <label for="ymin">&nbsp;Min value:</label>
+          <input type="text" name="ymin" id="ymin" size="5" />
+          <spaN>|</span>
+          <label for="movave">Moving Average Window (Must be Odd #):</label>
+          <input type="text" name="movave" id="movave" size="3" value="91"/> <br />
+          <input type="checkbox" name="dateplot" id="dateplot" />
+          <label for="dateplot">Only plot moving averages</label>
+          <span>|</span>
+          <input type="checkbox" name="filter0" id="filter0" />
+          <label for="filter0">Remove 0's from Thermo Fields</label>
+          <br />
+        </div>
+      </div>
+    </nav>
+    <main class='col-sm-12'>
+      <div id='svg-container' class='col-sm-12'>
+        <div id='svg-background'>
+          <div id='map-container' class='col-sm-12'>
+
+          </div>
+          <div id='svg-plot' class='col-sm-12'>
+            <div id='svg-title'>
+              
+            </div>
+            <div id='line-chart' class='col-sm-8'>
+
+            </div>
+            <div id='bar-chart' class='col-sm-4'>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+  </div>
+  
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+  <!-- <script src="includes/js/crossfilter.min.js"></script> -->
+  <script src="https://d3js.org/d3.v5.min.js"></script>
+  <!--<script src="includes/js/d3-tip.js"></script> -->
+  <script src="https://unpkg.com/crossfilter2@1.5/crossfilter.js"></script>
+  <script src="https://unpkg.com/dc@4/dist/dc.js"></script>
+  <script src="includes/misc/por.js"></script>
+  <script src="includes/js/helper.js"></script>
+  <script src="includes/js/datamanager.js"></script>
+  <script src="includes/js/plotting.js"></script>
+  <script src="includes/js/jqcalls.js"></script>
+  <script src="includes/js/main.js"></script>
+</body>
+</html>
