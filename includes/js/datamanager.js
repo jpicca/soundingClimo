@@ -6,7 +6,7 @@ d3Edge.dataManager = function module() {
       qdata = [], fdata, filtered = false,
       doy, station, soundTime, soundParm, soundParmUnit, fileName,
       ymin, ymax, period, smoothPeriod, indexDim, obs, groupByDay,
-      filter0s = false;
+      groupByDayRange, filter0s = false;
 
   var filter0Fields = ['sbcape','mlcape', 'mucape', 'mlcape03', 'dcape'];
 
@@ -140,7 +140,7 @@ d3Edge.dataManager = function module() {
         
         raw_data = csv_data;
 
-        console.log(raw_data)
+        //console.log(raw_data)
 
         // Adding the csv data to the crossfilter (not sure if this is 
         // needed right now)
@@ -227,10 +227,11 @@ d3Edge.dataManager = function module() {
         data.push(q);
       };
 
-      console.log(data)
+      //console.log(data)
+
       // ** Add our data to crossfilter **
       fdata.add(raw_data);
-      fdata.groupAll();
+      //fdata.groupAll();
 
       // New dimensions
       indexDim = fdata.dimension(d => d.dayIdx)
@@ -238,9 +239,12 @@ d3Edge.dataManager = function module() {
 
       // **Hard-coded stuff that needs to be improved **
       var binwidth = 0.05;
+      var rangeBinWidth = 0.5;
 
       // New groups
       barGroup = barDim.group(d => { return binwidth * Math.floor(d/binwidth)});
+
+      groupByDayRange = indexDim.group(d => { return data[d].index/rangeBinWidth });
 
       groupByDay = indexDim.group().reduce(
         (p,v) => {
@@ -286,7 +290,8 @@ d3Edge.dataManager = function module() {
   exports.getXFdata = function () { return fdata };
   exports.getindexDim = function () { return indexDim };
   exports.getbarDim = function () { return barDim };
-  exports.getGroupByDay = function () { return groupByDay};
+  exports.getGroupByDay = function () { return groupByDay };
+  exports.getGroupByDayRange = function() { return groupByDayRange };
   exports.getbarGroup = function () { return barGroup };
   exports.getData = function() { return data; };
   exports.getRawData = function() { return raw_data; };

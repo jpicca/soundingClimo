@@ -1,10 +1,10 @@
-var margin = {top: 20, right: 10, bottom: 50, left: 40};
+var margin = {top: 20, right: 40, bottom: 50, left: 40};
 
 class tsChart {
 
   // Create instance with variables
   constructor(width) {
-    this.width = width - margin.left - margin.right;
+    this.width = width //- margin.left - margin.right;
     this.title = "";
     this.ylabel = "";
   }
@@ -25,10 +25,11 @@ class tsChart {
     dcChart.width(this.width)
         .height(0.6*this.width)
         .margins(margin)
+        //.rangeChart(range)
         .x(d3.scaleTime()
           .domain([new Date(2008, 0, 1, 0), new Date(2009, 0, 1, 12)]))
         .renderHorizontalGridLines(true)
-        .renderVerticalGridLines(true)
+        //.renderVerticalGridLines(true)
         .dimension(dim)
         .group(group)
         .compose([
@@ -113,9 +114,9 @@ class tsChart {
         .attr('stroke','black')
         .style('opacity',0.5)
 
-    vGridlines.attr('stroke-width',0.5)
-        .attr('stroke','black')
-        .style('opacity',0.5)
+    // vGridlines.attr('stroke-width',0.5)
+    //     .attr('stroke','black')
+    //     .style('opacity',0.5)
 
     // dcjs doesn't have a good utility for area charts between lines
     // so manually hiding the lower area to focus on the IQR
@@ -130,7 +131,7 @@ class tsChart {
 class bChart {
 
   constructor(width) {
-    this.width = width - margin.left - margin.right;
+    this.width = width // - margin.left - margin.right;
     this.title = "";
     this.ylabel = "";
   }
@@ -161,6 +162,48 @@ class bChart {
         //.y(d3.scaleLinear().domain([0,600]))
         .x(d3.scaleLinear().domain([0,3]))
         .render()
+
+    //dc.renderAll('todo')
+  }
+
+}
+
+class rChart {
+
+  constructor(width) {
+    this.width = width;
+    this.title = "";
+    this.ylabel = "";
+  }
+
+  // Set title of chart
+  setTitle(title) {
+    this.title = title;
+    return this;
+  }
+
+  setYLabel(ylabel) {
+    this.ylabel = ylabel;
+    return this;
+  }
+
+  makeChart(dcChart,dim,group) {
+
+    dcChart.width(this.width)
+        .height(0.05*this.width)
+        .margins({top: 0, right: 40, bottom: 20, left: 40})
+        .mouseZoomable(false)
+        .dimension(dim)
+        .group(group)
+        .elasticY(true)
+        .x(d3.scaleLinear().domain([0,731]))
+        //.y(d3.scaleLinear().domain([0,100]))
+        //.x(d3.scaleTime()
+        //  .domain([new Date(2008, 0, 1, 0), new Date(2009, 0, 1, 12)]))
+        //.keyAccessor(p => {return dateFromDay(2008,p.key)})
+        .valueAccessor(p => p.value)
+        .xUnits(dc.units.fp.precision(0.5))
+        .render();
 
     //dc.renderAll('todo')
   }

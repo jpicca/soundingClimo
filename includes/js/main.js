@@ -2,11 +2,13 @@
 var dm = d3Edge.dataManager();
 var chart = new tsChart($("#line-chart").width())
 var chart2 = new bChart($("#bar-chart").width())
+var chart3 = new rChart($("#obs-count").width())
 
 // Instantiate dc Chart
 //const timeSeries = new dc.LineChart('#line-chart')
 var timeSeries = new dc.CompositeChart('#line-chart')
 var hist = new dc.BarChart('#bar-chart')
+var range = new dc.BarChart('#obs-count')
 
 // Updated Whether DataManager is operating on Raw or Filtered Files
 function updateFiltered() {
@@ -69,6 +71,7 @@ async function updateData() {
   // Make initial charts
   chart.makeChart(timeSeries,dm.getindexDim(),dm.getGroupByDay());
   chart2.makeChart(hist,dm.getbarDim(),dm.getbarGroup());
+  chart3.makeChart(range,dm.getindexDim(),dm.getGroupByDayRange());
 
   /* Old code using bindings */
   /*
