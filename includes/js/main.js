@@ -1,9 +1,12 @@
 // Initialize the data manager
 var dm = d3Edge.dataManager();
 var chart = new tsChart($("#line-chart").width())
+var chart2 = new bChart($("#bar-chart").width())
 
 // Instantiate dc Chart
-const timeSeries = new dc.LineChart('#line-chart')
+//const timeSeries = new dc.LineChart('#line-chart')
+var timeSeries = new dc.CompositeChart('#line-chart')
+var hist = new dc.BarChart('#bar-chart')
 
 // Updated Whether DataManager is operating on Raw or Filtered Files
 function updateFiltered() {
@@ -50,15 +53,22 @@ async function updateData() {
   await dm.readData(dm.fileName());
 
   // Do stuff with data
-  console.log('Promise returned!')
+  console.log('Data read!')
 
-  dm.createDefaultQuantiles();
+  await dm.createDefaultQuantiles();
 
-  chart.setTitle(dm.soundTime().toUpperCase() + " Soundings for " + dm.station().toUpperCase())
+  console.log("Quantiles updated!")
+
+  chart.setTitle(dm.soundTime().toUpperCase() + " Soundings for " + dm.station()
+        .toUpperCase())
         .setYLabel($('#sndparam option:selected').text());
 
   // Set chart title
   $('#svg-title').text(chart.title);
+
+  // Make initial charts
+  chart.makeChart(timeSeries,dm.getindexDim(),dm.getGroupByDay());
+  chart2.makeChart(hist,dm.getbarDim(),dm.getbarGroup());
 
   /* Old code using bindings */
   /*
@@ -86,5 +96,6 @@ $(document).ready(function() {
   updateSmoothPeriod();
   updateYaxisBounds();
   updateData();
+  
 
 })

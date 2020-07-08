@@ -5,7 +5,7 @@ d3Edge.dataManager = function module() {
   var exports = {}, data, raw_data,
       qdata = [], fdata, filtered = false,
       doy, station, soundTime, soundParm, soundParmUnit, fileName,
-      ymin, ymax, period, smoothPeriod, smoother, obs,
+      ymin, ymax, period, smoothPeriod, indexDim, obs, groupByDay,
       filter0s = false;
 
   var filter0Fields = ['sbcape','mlcape', 'mucape', 'mlcape03', 'dcape'];
@@ -123,26 +123,33 @@ d3Edge.dataManager = function module() {
       console.log(`readData processing with: ${_file}`)
       
       fdata = crossfilter();
+
+      testArr = []
       
       // Read csv file and organize columns
       d3.csv(_file).then(csv_data => {
         csv_data.forEach((d,i) => {
+
           d.index = i;
           d.date = parseDate(d.date);
           d.val = +d.val;
           d.type = 'raw'
-        });
+          d.dayIdx = Math.floor(2*(dateToDay(d.date) - 1));
 
+        });
+        
         raw_data = csv_data;
 
         console.log(raw_data)
 
         // Adding the csv data to the crossfilter (not sure if this is 
         // needed right now)
-        fdata.add(csv_data);
+        //fdata.add(csv_data);
       
         // Get day of year (numbered 1-365(6)) and use it as dimension in filter
-        doy = fdata.dimension(function(d) { return dateToDay(d.date); }); 
+        //doy = fdata.dimension(function(d) { return dateToDay(d.date); });
+        
+        // Also create a dimension based on the type of the record (quantile or raw)
 
         // Resolve promise once d3.csv has data processed
         resolve();
@@ -167,59 +174,120 @@ d3Edge.dataManager = function module() {
     qdata.p90 = []; qdata.p99 = []; qdata.p100 = [];
     qdata.mean = []; qdata.date = []; qdata.index = [];
     loopParms = exports.getSoundingLoopParms(soundTime);
-    for (i = loopParms[0]; i < 367; i+=loopParms[1]) {
-      tvals = [];
-      tdoy = doy.filter(i);
-      _tvals = tdoy.top(Infinity);
-      _tvals.forEach(function(p, j) { if (p.val >  -999.) {tvals.push(p.val); }; });
-      if (filter0s && $.inArray(soundParm, filter0Fields) > -1) { tvals = tvals.filter(function(p) { return p > 0; })};
-      tvals = tvals.sort(function(a,b) { return a-b; });
-      qdata.push()
-      qdata.p00.push(d3.min(tvals));
-      qdata.p01.push(d3.min(tvals));
-      qdata.p10.push(d3.quantile(tvals, 0.10));
-      qdata.p25.push(d3.quantile(tvals, 0.25));
-      qdata.p50.push(d3.quantile(tvals, 0.50));
-      qdata.p75.push(d3.quantile(tvals, 0.75));
-      qdata.p90.push(d3.quantile(tvals, 0.90));
-      qdata.p99.push(d3.max(tvals));
-      qdata.p100.push(d3.max(tvals));
-      qdata.mean.push(d3.mean(tvals));
-      qdata.index.push(i);
-      qdata.date.push(dateFromDay(2008, i));
-    };
-    qdata.p01 = exports.smoother(qdata.p01, period);
-    qdata.p10 = exports.smoother(qdata.p10, period);
-    qdata.p25 = exports.smoother(qdata.p25, period);
-    qdata.p50 = exports.smoother(qdata.p50, period);
-    qdata.p75 = exports.smoother(qdata.p75, period);
-    qdata.p90 = exports.smoother(qdata.p90, period);
-    qdata.p99 = exports.smoother(qdata.p99, period);
-    data = [];
-    for (i = 0; i < qdata.index.length; i++) {
-      var q = new Object();
-      q.index = qdata.index[i];
-      q.p00 = qdata.p00[i];
-      q.p01 = qdata.p01[i];
-      q.p10 = qdata.p10[i];
-      q.p25 = qdata.p25[i];
-      q.p50 = qdata.p50[i];
-      q.p75 = qdata.p75[i];
-      q.p90 = qdata.p90[i];
-      q.p99 = qdata.p99[i];
-      q.p100 = qdata.p100[i];
-      q.mean = qdata.mean[i];
-      q.date = qdata.date[i];
-      q.type = "quantile"
-      data.push(q);
-    };
 
-    console.log(data)
-    // Add quantile data to the crossfilter
-    fdata.add(data)
-    
+    return new Promise((resolve,reject) => {
+
+      for (i = loopParms[0]; i < 367; i+=loopParms[1]) {
+        tvals = []
+
+        // Filter raw data for current day of year
+        _tvals = raw_data.filter(d => { return dateToDay(d.date) == i })
+
+        _tvals.forEach(function(p) { if (p.val >  -999.) {tvals.push(p.val); }; });
+        if (filter0s && $.inArray(soundParm, filter0Fields) > -1) { tvals = tvals.filter(function(p) { return p > 0; })};
+        tvals = tvals.sort(function(a,b) { return a-b; });
+        qdata.push()
+        qdata.p00.push(d3.min(tvals));
+        qdata.p01.push(d3.min(tvals));
+        qdata.p10.push(d3.quantile(tvals, 0.10));
+        qdata.p25.push(d3.quantile(tvals, 0.25));
+        qdata.p50.push(d3.quantile(tvals, 0.50));
+        qdata.p75.push(d3.quantile(tvals, 0.75));
+        qdata.p90.push(d3.quantile(tvals, 0.90));
+        qdata.p99.push(d3.max(tvals));
+        qdata.p100.push(d3.max(tvals));
+        qdata.mean.push(d3.mean(tvals));
+        qdata.index.push(i);
+        qdata.date.push(dateFromDay(2008, i));
+      }
+
+      qdata.p01 = exports.smoother(qdata.p01, period);
+      qdata.p10 = exports.smoother(qdata.p10, period);
+      qdata.p25 = exports.smoother(qdata.p25, period);
+      qdata.p50 = exports.smoother(qdata.p50, period);
+      qdata.p75 = exports.smoother(qdata.p75, period);
+      qdata.p90 = exports.smoother(qdata.p90, period);
+      qdata.p99 = exports.smoother(qdata.p99, period);
+      data = [];
+      for (i = 0; i < qdata.index.length; i++) {
+        var q = new Object();
+        q.index = qdata.index[i];
+        q.p00 = qdata.p00[i];
+        q.p01 = qdata.p01[i];
+        q.p10 = qdata.p10[i];
+        q.p25 = qdata.p25[i];
+        q.p50 = qdata.p50[i];
+        q.p75 = qdata.p75[i];
+        q.p90 = qdata.p90[i];
+        q.p99 = qdata.p99[i];
+        q.p100 = qdata.p100[i];
+        q.mean = qdata.mean[i];
+        q.date = qdata.date[i];
+        q.type = "quantile"
+        data.push(q);
+      };
+
+      console.log(data)
+      // ** Add our data to crossfilter **
+      fdata.add(raw_data);
+      fdata.groupAll();
+
+      // New dimensions
+      indexDim = fdata.dimension(d => d.dayIdx)
+      barDim = fdata.dimension(d => d.val)
+
+      // **Hard-coded stuff that needs to be improved **
+      var binwidth = 0.05;
+
+      // New groups
+      barGroup = barDim.group(d => { return binwidth * Math.floor(d/binwidth)});
+
+      groupByDay = indexDim.group().reduce(
+        (p,v) => {
+          ++p.count
+          p.index = data[v.dayIdx].index
+          p.p00 = data[v.dayIdx].p00
+          p.p01 = data[v.dayIdx].p01
+          p.p10 = data[v.dayIdx].p10
+          p.p25 = data[v.dayIdx].p25
+          p.p50 = data[v.dayIdx].p50
+          p.mean = data[v.dayIdx].mean
+          p.p75 = data[v.dayIdx].p75
+          p.p90 = data[v.dayIdx].p90
+          p.p99 = data[v.dayIdx].p99
+          p.p100 = data[v.dayIdx].p100
+          return p;
+        },
+        (p,v) => {
+          --p.count
+          p.index = data[v.dayIdx].index
+          p.p00 = data[v.dayIdx].p00
+          p.p01 = data[v.dayIdx].p01
+          p.p10 = data[v.dayIdx].p10
+          p.p25 = data[v.dayIdx].p25
+          p.p50 = data[v.dayIdx].p50
+          p.mean = data[v.dayIdx].mean
+          p.p75 = data[v.dayIdx].p75
+          p.p90 = data[v.dayIdx].p90
+          p.p99 = data[v.dayIdx].p99
+          p.p100 = data[v.dayIdx].p100
+          return p;
+        },
+        () => ({count: 0, index:0, p00: 0, p01: 0, p10: 0,
+           p25: 0, p50: 0, mean: 0, p75: 0, p90: 0, p99: 0, p100: 0})
+      )
+
+      // Resolve promise once quantiles are calculated
+      resolve();
+    });
+
   };
 
+  exports.getXFdata = function () { return fdata };
+  exports.getindexDim = function () { return indexDim };
+  exports.getbarDim = function () { return barDim };
+  exports.getGroupByDay = function () { return groupByDay};
+  exports.getbarGroup = function () { return barGroup };
   exports.getData = function() { return data; };
   exports.getRawData = function() { return raw_data; };
   exports.getDayOfYearData = function() { return doy; };
