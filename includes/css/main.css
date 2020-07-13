@@ -280,3 +280,24 @@ main { width: 100%; border: 0.1em solid #DDD; height: 1000px;}
   top: 100%;
   left: 0;
 }
+
+#min-table, #max-table {
+  font-size: 10px;
+}
+
+#table-holder {
+  padding: 0;
+}
+
+#chart-sample {
+  font-size: 10px;
+}
+
+#table-holder th, #table-holder td {
+  padding-right: 0.1rem; 
+  padding-left: 0.1rem;
+}
+
+#min-table thead, #max-table thead, .dc-table-section {
+  display: none;
+}

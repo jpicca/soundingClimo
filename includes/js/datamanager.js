@@ -133,8 +133,13 @@ d3Edge.dataManager = function module() {
           d.index = i;
           d.date = parseDate(d.date);
           d.val = +d.val;
-          d.type = 'raw'
+
+          // Create a 1-731 index to access quantile values
           d.dayIdx = Math.floor(2*(dateToDay(d.date) - 1));
+
+          // Create our 2008 datetimes for plotting
+          // Use this for new dimensioning along chart axes
+          d.idxDate = dateFromDay(2008,dateToDay(d.date))
 
         });
         
@@ -227,26 +232,28 @@ d3Edge.dataManager = function module() {
         data.push(q);
       };
 
-      //console.log(data)
-
       // ** Add our data to crossfilter **
-      fdata.add(raw_data);
+      // Use a filter to only add non-missing data
+      fdata.add(raw_data.filter(d => { return d.val > -999 }));
       //fdata.groupAll();
 
       // New dimensions
       indexDim = fdata.dimension(d => d.dayIdx)
       barDim = fdata.dimension(d => d.val)
+      dateIdxDim = fdata.dimension(d => d.idxDate)
 
-      // **Hard-coded stuff that needs to be improved **
+      // ** Hard-coded stuff that needs to be improved **
       var binwidth = 0.05;
       var rangeBinWidth = 0.5;
 
       // New groups
       barGroup = barDim.group(d => { return binwidth * Math.floor(d/binwidth)});
-
       groupByDayRange = indexDim.group(d => { return data[d].index/rangeBinWidth });
 
-      groupByDay = indexDim.group().reduce(
+      groupByDateCount = dateIdxDim.group();
+
+      //groupByDay = indexDim.group().reduce(
+      groupByDay = dateIdxDim.group().reduce(
         (p,v) => {
           ++p.count
           p.index = data[v.dayIdx].index
@@ -290,13 +297,19 @@ d3Edge.dataManager = function module() {
   exports.getXFdata = function () { return fdata };
   exports.getindexDim = function () { return indexDim };
   exports.getbarDim = function () { return barDim };
+  exports.getDateIdxDim = function () { return dateIdxDim };
+
   exports.getGroupByDay = function () { return groupByDay };
   exports.getGroupByDayRange = function() { return groupByDayRange };
   exports.getbarGroup = function () { return barGroup };
+  exports.getGroupByDateCount = function () { return groupByDateCount };
+
   exports.getData = function() { return data; };
   exports.getRawData = function() { return raw_data; };
   exports.getDayOfYearData = function() { return doy; };
   exports.getObs = function() { return obs; };
+
+  exports.getUnit = function() { return soundParmUnit; };
   
   return exports;
 
