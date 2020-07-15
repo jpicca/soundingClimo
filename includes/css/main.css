@@ -283,6 +283,7 @@ main { width: 100%; border: 0.1em solid #DDD; height: 1000px;}
 
 #min-table, #max-table {
   font-size: 10px;
+  margin-bottom: 0rem !important;
 }
 
 #table-holder {
@@ -290,7 +291,7 @@ main { width: 100%; border: 0.1em solid #DDD; height: 1000px;}
 }
 
 #chart-sample {
-  font-size: 10px;
+  font-size: 11px;
 }
 
 #table-holder th, #table-holder td {
@@ -301,3 +302,81 @@ main { width: 100%; border: 0.1em solid #DDD; height: 1000px;}
 #min-table thead, #max-table thead, .dc-table-section {
   display: none;
 }
+
+.datetime {
+  stroke-opacity: 0.8 !important;
+  fill-opacity: 0.8 !important;
+}
+
+#tip {
+  visibility: hidden;
+  position: absolute;
+  background-color: #00000073;
+  color: white;
+  border-radius: 0.2rem;
+  padding: 0.5rem;
+}
+
+#right-column {
+  padding-top: 0.5rem;
+}
+
+#min {
+  font-weight: bold;
+  color: #665DF2;
+}
+
+#amin {
+  font-weight: bold;
+  color: #000F8B;
+}
+
+#a10 {
+  font-weight: bold;
+  color: #2AAAAA;
+}
+
+#a25 {
+  font-weight: bold;
+  color: #800001;
+}
+
+#mean {
+  font-weight: bold;
+  color: #333333;
+}
+
+#amed {
+  font-weight: bold;
+  color: #000000;
+}
+
+#a75 {
+  font-weight: bold;
+  color: #800001;
+}
+
+#a90 {
+  font-weight: bold;
+  color: #ce933b;
+}
+
+#amax {
+  font-weight: bold;
+  color: #8B0000;
+}
+
+#max {
+  font-weight: bold;
+  color: #F9182C;
+}
+
+.table-title {
+  font-size: 12px;
+  font-weight: bold;
+}
+
+#instruction {
+  font-size: 11px;
+}
+

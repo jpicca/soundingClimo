@@ -24,13 +24,14 @@ class tsChart {
 
   makeChart(dcChart,dim,group) {
     dcChart.width(this.width)
-      .height(0.6*this.width)
+      .height(0.65*this.width)
       .margins(margin)
       .x(d3.scaleTime()
           .domain([new Date(2008, 0, 1, 0), new Date(2009, 0, 1, 12)]))
       .renderHorizontalGridLines(true)
       .dimension(dim)
       .group(group)
+      .yAxisLabel($('#sndparam option:selected').text())
       .rangeChart(range)
       .brushOn(false)
       .compose([
@@ -39,40 +40,35 @@ class tsChart {
             .group(group)
             .valueAccessor(p => p.value.p25)
             .stack(group, 'p75', p => p.value.p75 - p.value.p25)
-            .renderArea(true),
+            .renderArea(true)
+            .colors(['#800001']),
         new dc.LineChart(dcChart)
-            //.dimension(dim)
-            //.group(group)
+            .colors(['#665DF2'])
             .valueAccessor(p => p.value.p00),
         new dc.LineChart(dcChart)
-            //.dimension(dim)
-            //.group(group)
+            .colors(['#000F8B'])
             .valueAccessor(p => p.value.p01),
         new dc.LineChart(dcChart)
-            //.dimension(dim)
-            //.group(group)
-            .valueAccessor(p => p.value.p10),
+            .valueAccessor(p => p.value.p10)
+            .colors(['#2AAAAA']),
         new dc.LineChart(dcChart)
-            //.dimension(dim)
-            //group(group)
-            .valueAccessor(p => p.value.p50),
+            .valueAccessor(p => p.value.p50)
+            .colors(['#000000']),
         new dc.LineChart(dcChart)
-            //.dimension(dim)
-            //.group(group)
-            .valueAccessor(p => p.value.mean),
+            .valueAccessor(p => p.value.mean)
+            .colors(['#333333']),
         new dc.LineChart(dcChart)
-            //.dimension(dim)
-            //.group(group)
-            .valueAccessor(p => p.value.p90),
+            .valueAccessor(p => p.value.p90)
+            .colors(['#ce933b']),
         new dc.LineChart(dcChart)
-            //.dimension(dim)
-            //.group(group)
-            .valueAccessor(p => p.value.p99),
+            .valueAccessor(p => p.value.p99)
+            .colors(['#8B0000']),
         new dc.LineChart(dcChart)
-            //.dimension(dim)
-            //.group(group)
             .valueAccessor(p => p.value.p100)
+            .colors(['#F9182C'])
       ])
+      // Use the highlighting function to bind data updating on render/re-draws
+      .on('renderlet', highlighting)
       .xAxis()
       .tickFormat(d3.timeFormat('%b %d'))
 
@@ -88,134 +84,9 @@ class tsChart {
       // dcjs doesn't have a good utility for area charts between lines
       // so manually hiding the lower area to focus on the IQR
       var area2hide = d3.select('path.area')
-
       area2hide.style('fill-opacity',0)
-  }
-
-  // ---------- new makeChart ----------- 
-
-  /* ------ Old makeChart -----------
-
-  makeChart(dcChart,dim,group) {
-
-    dcChart.width(this.width)
-        .height(0.6*this.width)
-        .margins(margin)
-        //.rangeChart(range)
-        .x(d3.scaleTime()
-          .domain([new Date(2008, 0, 1, 0), new Date(2009, 0, 1, 12)]))
-        .renderHorizontalGridLines(true)
-        //.renderVerticalGridLines(true)
-        .dimension(dim)
-        .group(group)
-        .compose([
-          new dc.LineChart(dcChart)
-              //.dimension(dim)
-              //group(group)
-              .keyAccessor(p => {return dateFromDay(2008,p.value.index)})
-              .valueAccessor(p => p.value.p50),
-          new dc.LineChart(dcChart)
-              //.dimension(dim)
-              //.group(group)
-              .keyAccessor(p => {return dateFromDay(2008,p.value.index)})
-              .valueAccessor(p => p.value.mean),
-          new dc.LineChart(dcChart)
-              //.dimension(dim)
-              //.group(group)
-              .keyAccessor(p => {return dateFromDay(2008,p.value.index)})
-              .valueAccessor(p => p.value.p00),
-          new dc.LineChart(dcChart)
-              //.dimension(dim)
-              //.group(group)
-              .keyAccessor(p => {return dateFromDay(2008,p.value.index)})
-              .valueAccessor(p => p.value.p01),
-          new dc.LineChart(dcChart)
-              //.dimension(dim)
-              //.group(group)
-              .keyAccessor(p => {return dateFromDay(2008,p.value.index)})
-              .valueAccessor(p => p.value.p10),
-          new dc.LineChart(dcChart)
-              .dimension(dim)
-              .group(group)
-              .keyAccessor(p => {return dateFromDay(2008,p.value.index)})
-              .valueAccessor(p => p.value.p25)
-              .stack(group, 'p75', p => p.value.p75 - p.value.p25)
-              .renderArea(true),
-          new dc.LineChart(dcChart)
-              //.dimension(dim)
-              //.group(group)
-              .keyAccessor(p => {return dateFromDay(2008,p.value.index)})
-              .valueAccessor(p => p.value.p90),
-          new dc.LineChart(dcChart)
-              //.dimension(dim)
-              //.group(group)
-              .keyAccessor(p => {return dateFromDay(2008,p.value.index)})
-              .valueAccessor(p => p.value.p99),
-          new dc.LineChart(dcChart)
-              //.dimension(dim)
-              //.group(group)
-              .keyAccessor(p => {return dateFromDay(2008,p.value.index)})
-              .valueAccessor(p => p.value.p100)
-        ])
-        // .on('renderlet', function(chart) {
-        //   let hGridlines = chart.select('g.grid-line.horizontal').selectAll('line');
-        //   hGridlines.attr('stroke-width',0.5)
-        //     .attr('stroke','black')
-        //     .style('opacity',0.5)
-
-        //   let area2hide = chart.select('path.area')
-
-        //   area2hide.style('fill-opacity',0)
-        // })
-        .xAxis()
-        .tickFormat(d3.timeFormat('%B'))
-
-    // Render charts
-    //dc.renderAll('timeseries');
-
-    // Initial chart rendering
-    // dcChart.renderArea(false)
-    //   .width(this.width)
-    //   .height(0.6*this.width)
-    //   .margins(margin)
-    //   .dimension(dim)
-    //   .mouseZoomable(false)
-    //   .group(group)
-    //   .x(d3.scaleTime()
-    //     .domain([new Date(2008, 0, 1, 0), new Date(2009, 0, 1, 12)]))
-    //   .keyAccessor(p => {return dateFromDay(2008,p.value.index)})
-    //   .valueAccessor(d => 0) //p => p.value.p50)
-    //   .stack(group, 'p50', p => p.value.p50)
-    //   .stack(group, 'p75', p => p.value.p75) // - p.value.p50)
-
-    // Formatting x-axis
-    //dcChart.xAxis()
-    //  .tickFormat(d3.timeFormat('%B'));
-
-    dcChart.render();
-
-    // Format grid lines (and anything else)
-    var hGridlines = d3.select('g.grid-line.horizontal').selectAll('line')
-    // var vGridlines = d3.select('g.grid-line.vertical').selectAll('line')
-    
-    hGridlines.attr('stroke-width',0.5)
-        .attr('stroke','black')
-        .style('opacity',0.5)
-
-    // vGridlines.attr('stroke-width',0.5)
-    //     .attr('stroke','black')
-    //     .style('opacity',0.5)
-
-    // dcjs doesn't have a good utility for area charts between lines
-    // so manually hiding the lower area to focus on the IQR
-    var area2hide = d3.select('path.area')
-
-    area2hide.style('fill-opacity',0)
 
   }
-
-  ---------- End of old make chart --------- */
-
 }
 
 class bChart {
@@ -247,11 +118,14 @@ class bChart {
         .group(group)
         .elasticY(true)
         .xUnits(dc.units.fp.precision(0.05))
+        .yAxisLabel('# Obs')
         //.centerBar(true)
         //.gap(1)
         //.y(d3.scaleLinear().domain([0,600]))
-        .x(d3.scaleLinear().domain([0,3]))
-        .render()
+        .x(d3.scaleLinear().domain([0,3]));
+        
+        dcChart.yAxis().ticks(8);
+        dcChart.render();
 
     //dc.renderAll('todo')
   }
@@ -285,10 +159,11 @@ class rChart {
       .mouseZoomable(false)
       .dimension(dim)
       .group(group)
+      .yAxisLabel('# Obs')
       .elasticY(true)
       .x(d3.scaleTime()
           .domain([new Date(2008, 0, 1, 0), new Date(2009, 0, 1, 12)]))
-      .valueAccessor(p => p.value)
+      //.valueAccessor(p => p.value)
       .xAxis()
       .tickFormat(d => { 
         //let date = dateFromDay(2008,d/2);
@@ -387,5 +262,173 @@ class tabChart {
         .render();
         //.data(dim => dim.top(5))
   }
+
+}
+
+function highlighting() {
+
+  // Set up tooltip
+  //let chartGrab = d3.select('#line-chart')
+  let circles = d3.selectAll('circle')
+  let formatter = d3.timeFormat("%b %d (%HZ)")
+  let date;
+
+  circles.on('mouseover', d => 
+    {
+
+      updateSample(d,formatter);
+      /*d3.select('span.mutable')
+        .html(`<b>${formatter(d.data.key)}</b>`)
+
+      let row = d3.select('tr.mutable')
+
+      row.select('#min')
+        .text(d.data.value.p00.toFixed(2))
+
+      row.select('#amin')
+        .text(d.data.value.p01.toFixed(2))
+
+      row.select('#a10')
+        .text(d.data.value.p10.toFixed(2))
+
+      row.select('#a25')
+        .text(d.data.value.p25.toFixed(2))
+
+      row.select('#amed')
+        .text(d.data.value.p50.toFixed(2))
+
+      row.select('#mean')
+        .text(d.data.value.mean.toFixed(2))
+
+      row.select('#a75')
+        .text(d.data.value.p75.toFixed(2))
+
+      row.select('#a90')
+        .text(d.data.value.p90.toFixed(2))
+
+      row.select('#amax')
+        .text(d.data.value.p99.toFixed(2))
+
+      row.select('#max')
+        .text(d.data.value.p100.toFixed(2))*/
+    }).on('click', d => {
+
+      // If there are unmutable classes present, that means we have a date selected
+      let locked = d3.select('.unmutable').node()
+
+      if (locked) {
+        d3.selectAll('.unmutable')
+          .classed('mutable',true)
+
+        updateSample(d,formatter)
+      }
+
+      // Remove previous date highlighting of dots
+      d3.selectAll('.datetime')
+        .classed('datetime',false)
+
+      // If we click dot, we want to lock date/data on table
+      d3.select('th.mutable')
+        .classed('mutable', false)
+        .classed('unmutable', true)
+
+      d3.select('tr.mutable')
+        .classed('mutable', false)
+        .classed('unmutable', true)
+
+      // Get date from data 
+      date = d.data.key;
+
+      // Get list of elements that meet the data filter
+      let elements = d3.selectAll('circle')
+                        .filter(d => { return d.data.key == date})
+
+      // Use nodes to grab cx and list of cy's
+      // let cx = elements.nodes()[0].getAttribute('cx') + margin.left
+
+      // let cy = [];
+      // elements.nodes().forEach( entry => {
+      //   cy.push(+entry.getAttribute('cy'))
+      // })
+
+      // console.log(cx)
+
+      // // Take max/min of cy
+      // let ymax = d3.max(cy) + margin.top
+      // let ymin = d3.min(cy) + margin.top
+
+      // // Draw a line on svg representing the day
+      // let svg = d3.select('#line-chart').select('svg')
+      
+      // svg.append('line')
+      //     .classed('dateline',true)
+      //     .attr('x1',cx)
+      //     .attr('x2',cx)
+      //     .attr('y1',ymin)
+      //     .attr('y2',ymax)
+      //     .style('stroke','black')
+
+      d3.selectAll('circle')
+        .filter(d => { return d.data.key == date})
+        .classed('datetime', true)
+
+      // Use the instruction span to allow user to unlock data
+      let instruct = d3.select('#instruction')
+        
+      instruct.html('<a href="#">&nbsp; Unlock Data</a>')
+
+      instruct.select('a')
+        .on('click', () => {
+          instruct.html('&nbsp; (Click sampled date to lock data)')
+          d3.selectAll('.datetime')
+            .classed('datetime',false)
+
+          d3.selectAll('.unmutable')
+            .classed('mutable',true)
+            .classed('unmutable',false)
+        })
+      
+      
+
+    });
+
+}
+
+function updateSample(d,formatter) {
+
+  d3.select('th.mutable')
+        .html(`<b>${formatter(d.data.key)}</b>`)
+
+      let row = d3.select('tr.mutable')
+
+      row.select('#min')
+        .text(d.data.value.p00.toFixed(2))
+
+      row.select('#amin')
+        .text(d.data.value.p01.toFixed(2))
+
+      row.select('#a10')
+        .text(d.data.value.p10.toFixed(2))
+
+      row.select('#a25')
+        .text(d.data.value.p25.toFixed(2))
+
+      row.select('#amed')
+        .text(d.data.value.p50.toFixed(2))
+
+      row.select('#mean')
+        .text(d.data.value.mean.toFixed(2))
+
+      row.select('#a75')
+        .text(d.data.value.p75.toFixed(2))
+
+      row.select('#a90')
+        .text(d.data.value.p90.toFixed(2))
+
+      row.select('#amax')
+        .text(d.data.value.p99.toFixed(2))
+
+      row.select('#max')
+        .text(d.data.value.p100.toFixed(2))
 
 }
