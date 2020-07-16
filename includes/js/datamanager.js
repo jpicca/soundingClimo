@@ -6,7 +6,7 @@ d3Edge.dataManager = function module() {
       qdata = [], fdata, filtered = false,
       doy, station, soundTime, soundParm, soundParmUnit, fileName,
       ymin, ymax, period, smoothPeriod, indexDim, obs, groupByDay,
-      groupByDayRange, filter0s = false;
+      groupByDayRange, binwidth, filter0s = false;
 
   var filter0Fields = ['sbcape','mlcape', 'mucape', 'mlcape03', 'dcape'];
 
@@ -238,17 +238,17 @@ d3Edge.dataManager = function module() {
       //fdata.groupAll();
 
       // New dimensions
-      indexDim = fdata.dimension(d => d.dayIdx)
+      //indexDim = fdata.dimension(d => d.dayIdx)
       barDim = fdata.dimension(d => d.val)
       dateIdxDim = fdata.dimension(d => d.idxDate)
 
       // ** Hard-coded stuff that needs to be improved **
-      var binwidth = 0.05;
-      var rangeBinWidth = 0.5;
+      binwidth = parmParm[$('#sndparam option:selected').text()]
+      //var rangeBinWidth = 0.5;
 
       // New groups
       barGroup = barDim.group(d => { return binwidth * Math.floor(d/binwidth)});
-      groupByDayRange = indexDim.group(d => { return data[d].index/rangeBinWidth });
+      //groupByDayRange = indexDim.group(d => { return data[d].index/rangeBinWidth });
 
       groupByDateCount = dateIdxDim.group();
 

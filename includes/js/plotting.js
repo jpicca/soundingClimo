@@ -1,4 +1,4 @@
-var margin = {top: 20, right: 20, bottom: 50, left: 40};
+var margin = {top: 10, right: 20, bottom: 40, left: 40};
 
 class tsChart {
 
@@ -25,7 +25,7 @@ class tsChart {
   makeChart(dcChart,dim,group) {
     dcChart.width(this.width)
       .height(0.65*this.width)
-      .margins(margin)
+      //.margins(margin)
       .x(d3.scaleTime()
           .domain([new Date(2008, 0, 1, 0), new Date(2009, 0, 1, 12)]))
       .renderHorizontalGridLines(true)
@@ -68,7 +68,9 @@ class tsChart {
             .colors(['#F9182C'])
       ])
       // Use the highlighting function to bind data updating on render/re-draws
-      .on('renderlet', highlighting)
+      .on('renderlet', () => {
+        highlighting();
+      })
       .xAxis()
       .tickFormat(d3.timeFormat('%b %d'))
 
@@ -117,8 +119,9 @@ class bChart {
         .dimension(dim)
         .group(group)
         .elasticY(true)
-        .xUnits(dc.units.fp.precision(0.05))
+        .xUnits(dc.units.fp.precision(parmParm[$('#sndparam option:selected').text()]))
         .yAxisLabel('# Obs')
+        .xAxisLabel($('#sndparam option:selected').text())
         //.centerBar(true)
         //.gap(1)
         //.y(d3.scaleLinear().domain([0,600]))
@@ -155,7 +158,7 @@ class rChart {
 
     dcChart.width(this.width)
       .height(0.1*this.width)
-      .margins({top: 10, right: 20, bottom: 30, left: 40})
+      //.margins(margin)
       .mouseZoomable(false)
       .dimension(dim)
       .group(group)
