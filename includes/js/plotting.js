@@ -34,6 +34,7 @@ class tsChart {
       .dimension(dim)
       .group(group)
       .yAxisLabel($('#sndparam option:selected').text())
+      .elasticY(true)
       .rangeChart(range)
       .brushOn(false)
       .compose([
@@ -73,22 +74,23 @@ class tsChart {
       .on('renderlet', () => {
         highlighting();
       })
+      .on('pretransition', () => {
+        // Format grid lines (and anything else)
+        var hGridlines = d3.select('g.grid-line.horizontal').selectAll('line')
+        
+        hGridlines.attr('stroke-width',0.5)
+            .attr('stroke','black')
+            .style('opacity',0.5)
+
+        // dcjs doesn't have a good utility for area charts between lines
+        // so manually hiding the lower area to focus on the IQR
+        var area2hide = d3.select('path.area')
+        area2hide.style('fill-opacity',0)
+      })
       .xAxis()
       .tickFormat(d3.timeFormat('%b %d'))
 
       dcChart.render();
-
-      // Format grid lines (and anything else)
-      var hGridlines = d3.select('g.grid-line.horizontal').selectAll('line')
-      
-      hGridlines.attr('stroke-width',0.5)
-          .attr('stroke','black')
-          .style('opacity',0.5)
-
-      // dcjs doesn't have a good utility for area charts between lines
-      // so manually hiding the lower area to focus on the IQR
-      var area2hide = d3.select('path.area')
-      area2hide.style('fill-opacity',0)
 
   }
 }
@@ -266,6 +268,16 @@ class tabChart {
         //.data(dim => dim.top(5))
   }
 
+}
+
+function loadingFormat() {
+  $("#svg-plot").css("opacity",0.1)
+  $("#loading-page").css("visibility","visible")
+}
+
+function finishedFormat() {
+  $("#svg-plot").css("opacity",1)
+  $("#loading-page").css("visibility","hidden")
 }
 
 function highlighting() {

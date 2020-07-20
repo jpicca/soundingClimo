@@ -1,5 +1,9 @@
 // Data Manager object
 var d3Edge = {};
+
+// ** Global variables for testings **
+var tempXF, tempDim, newGroup;
+
 d3Edge.dataManager = function module() {
 
   var exports = {}, data, raw_data,
@@ -134,7 +138,7 @@ d3Edge.dataManager = function module() {
           d.date = parseDate(d.date);
           d.val = +d.val;
 
-          // Create a 1-731 index to access quantile values
+          // Create a 0-731 index to access quantile values
           d.dayIdx = Math.floor(2*(dateToDay(d.date) - 1));
 
           // Create our 2008 datetimes for plotting
@@ -242,7 +246,11 @@ d3Edge.dataManager = function module() {
       barDim = fdata.dimension(d => d.val)
       dateIdxDim = fdata.dimension(d => d.idxDate)
 
-      // ** Hard-coded stuff that needs to be improved **
+      // Create an identical dimension to allow user to filter via sounding time radio button
+      // Charts don't "listen" to their own dimension (to prevent weird actions)
+      userFilterDim = fdata.dimension(d => d.idxDate)
+
+      // ** Make sure to update the parmparm values **
       binwidth = parmParm[$('#sndparam option:selected').text()]
       //var rangeBinWidth = 0.5;
 
@@ -294,8 +302,57 @@ d3Edge.dataManager = function module() {
 
   };
 
+  // This internal method is used to create temporary crossfilter/dimension
+  // in order to update the time series chart
+  exports.updateTSGroup = function () {
+
+    //console.log(dateIdxDim.top(10))
+    let tempXF = crossfilter(dateIdxDim.top(Infinity));
+    let tempDim = tempXF.dimension(d => d.idxDate)
+
+    let newGroup = tempDim.group().reduce(
+      (p,v) => {
+        ++p.count
+        p.index = data[v.dayIdx].index
+        p.p00 = data[v.dayIdx].p00
+        p.p01 = data[v.dayIdx].p01
+        p.p10 = data[v.dayIdx].p10
+        p.p25 = data[v.dayIdx].p25
+        p.p50 = data[v.dayIdx].p50
+        p.mean = data[v.dayIdx].mean
+        p.p75 = data[v.dayIdx].p75
+        p.p90 = data[v.dayIdx].p90
+        p.p99 = data[v.dayIdx].p99
+        p.p100 = data[v.dayIdx].p100
+        return p;
+      },
+      (p,v) => {
+        --p.count
+        p.index = data[v.dayIdx].index
+        p.p00 = data[v.dayIdx].p00
+        p.p01 = data[v.dayIdx].p01
+        p.p10 = data[v.dayIdx].p10
+        p.p25 = data[v.dayIdx].p25
+        p.p50 = data[v.dayIdx].p50
+        p.mean = data[v.dayIdx].mean
+        p.p75 = data[v.dayIdx].p75
+        p.p90 = data[v.dayIdx].p90
+        p.p99 = data[v.dayIdx].p99
+        p.p100 = data[v.dayIdx].p100
+        return p;
+      },
+      () => ({count: 0, index:0, p00: 0, p01: 0, p10: 0,
+         p25: 0, p50: 0, mean: 0, p75: 0, p90: 0, p99: 0, p100: 0})
+    )
+
+    //console.log(newGroup.top(10))
+    chart.makeChart(timeSeries,tempDim,newGroup);
+
+  };
+
   exports.getXFdata = function () { return fdata };
-  exports.getindexDim = function () { return indexDim };
+  exports.getUserDim = function () { return userFilterDim };
+  //exports.getindexDim = function () { return indexDim };
   exports.getbarDim = function () { return barDim };
   exports.getDateIdxDim = function () { return dateIdxDim };
 

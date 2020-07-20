@@ -284,6 +284,13 @@ main { width: 100%; border: 0.1em solid #DDD; height: 1000px;}
   left: 0;
 }
 
+#loading-page {
+  position: fixed;
+  z-index: 100;
+  top: 50%;
+  visibility: hidden;
+}
+
 #min-table, #max-table {
   font-size: 0.75rem;
   margin-bottom: 0rem !important;

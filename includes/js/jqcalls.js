@@ -5,11 +5,23 @@ $("area").on("click", function() {
     updateData();
 });
 
-// On Time Change
-$("#soundingtimes input[type='radio']").on("change", async function() {
-  updateSoundTime();
-  await updateQuantiles();
+// Change station via menu
+$("#stn").on("change", function() {
+
+  // Decrease opacity of plots while new data is processing
+  loadingFormat();
+
+  updateStation();
   updateData();
+});
+
+// On Time Change
+$("#soundingtimes input[type='radio']").on("change", function() {
+
+  //loadingFormat();
+  updateSoundTime();
+
+  refreshChart('time');
 });
 
 // On Filtered Change

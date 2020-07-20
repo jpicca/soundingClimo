@@ -61,15 +61,19 @@ function updateQuantiles() {
 }
 
 // Update the data in the DataManager
-async function updateData() {
+async function updateData(newFile=true) {
 
   /* Using promise resolve */
 
   // Await the resolution of the promise in readData before continuing
-  await dm.readData(dm.fileName());
+  // Introduced an if statement -- if we're not reading a new file, we don't need to run
+  // readData (I think)
 
-  // Do stuff with data
-  console.log('Data read!')
+  if (newFile) {
+  
+    await dm.readData(dm.fileName());
+
+  }
 
   await dm.createDefaultQuantiles();
 
@@ -89,27 +93,54 @@ async function updateData() {
 
   chart2.makeChart(hist,dm.getbarDim(),dm.getbarGroup());
   
-  //chart3.makeChart(range,dm.getindexDim(),dm.getGroupByDayRange());
   chart3.makeChart(range,dm.getDateIdxDim(),dm.getGroupByDateCount());
   
   chart4.makeChart(maxTab,dm.getbarDim(),dm.getUnit());
   chart5.makeChart(minTab,dm.getbarDim(),dm.getUnit(),false);
 
-  /* Old code using bindings */
-  /*
-  dm.readData(dm.fileName());
-  dm.on("dataReady", function() {
-    updateQuantiles();
-    chart
-      .title(dm.soundTime().toUpperCase() + " Soundings for " + dm.station().toUpperCase())
-      .yLabel($('#sndparam option:selected').text());
-    d3.select("#svg-plot")
-      .datum(dm.getData())
-      .call(chart);
-    $("#legend").removeClass("hide").css("display", "inline-block");
-    plotObs();
-  }); */
+  finishedFormat();
 };
+
+function refreshChart(type) {
+
+  switch (type) {
+    case 'time' :
+      let newTime = +$("#soundingtimes input[type='radio']:checked").val().slice(0,2)
+      
+      // If newTime is coerced to int, it'll be 0 or 12; otherwise 'all' is changed to NaN
+      // Time is all
+      if (isNaN(newTime)) {
+        
+        // Clear the time filters
+        dm.getUserDim().filter()
+
+        // Redraw all charts (except for time series)
+        dc.redrawAll();
+
+        // Update time series chart with original dimension / group
+        chart.makeChart(timeSeries,dm.getDateIdxDim(),dm.getGroupByDay());
+
+      } 
+      // Time is 00 or 12
+      else {
+        dm.getUserDim().filter(d => { return d.getHours() == newTime });
+        
+        // Redraw all charts (except time series)
+        dc.redrawAll();
+
+        // Time series has to use a special function that utilizes temp crossfilters/dimensions
+        dm.updateTSGroup();
+      }
+
+      // Update title
+      $('#svg-title').text(`${dm.soundTime().toUpperCase()} Soundings for ${dm.station().toUpperCase()}`)
+
+      break;
+  }
+
+  finishedFormat();
+
+}
 
 $(document).ready(function() {
 
