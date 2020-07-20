@@ -7,14 +7,14 @@ body { background-color: #036; font-family: Arial, Helvetica, sans-serif; }
 a:link { color: #9ACD32; text-decoration: none; }
 a:hover { color: #93C; text-decoration: underline; }
 input,select { color: #000; text-align: center; font-size: 10px; }
-label {font-size: 12px; margin-bottom: 0; margin-top: 0;}
+label {font-size: 0.5rem; margin-bottom: 0; margin-top: 0;}
 
 
 /* Classes */
 .centered-container { width: 100%; margin: auto; }
 .sndparam-value { text-align: center; }
 .sndparam-header { font-weight: bold; }
-.style5 { color: rgb(0, 0, 0); font-weight: bold; font-size: 12px; }
+.style5 { color: rgb(0, 0, 0); font-weight: bold; font-size: 0.5rem; }
 .style7 { color: #FF0; font-size: 10px; }
 .style9 { color: #FFF; font-size: 10px; text-align: center; display: block; }
 .style11 { color:  rgb(0, 0, 0); font-size: 11px;}
@@ -40,7 +40,10 @@ label {font-size: 12px; margin-bottom: 0; margin-top: 0;}
 #contentwrapper { width: 100%; }
 
 /* Navigation Bar */
-#secondbar {padding: 0rem 1rem;}
+#secondbar {
+  padding: 0rem 1rem;
+  font-size: 0.8rem;
+}
 
 
 /* Left Sidebar */
@@ -282,7 +285,7 @@ main { width: 100%; border: 0.1em solid #DDD; height: 1000px;}
 }
 
 #min-table, #max-table {
-  font-size: 10px;
+  font-size: 0.75rem;
   margin-bottom: 0rem !important;
 }
 
@@ -291,7 +294,7 @@ main { width: 100%; border: 0.1em solid #DDD; height: 1000px;}
 }
 
 #chart-sample {
-  font-size: 11px;
+  font-size: 0.7rem;
 }
 
 #table-holder th, #table-holder td {
@@ -380,3 +383,7 @@ main { width: 100%; border: 0.1em solid #DDD; height: 1000px;}
   font-size: 11px;
 }
 
+/* Used to adjust table size -- bootstrap padding is too big */
+.table td, .table th {
+  padding: .2rem;
+}

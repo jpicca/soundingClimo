@@ -1,4 +1,5 @@
 var margin = {top: 10, right: 20, bottom: 40, left: 40};
+var height = $(window).height()
 
 class tsChart {
 
@@ -24,7 +25,8 @@ class tsChart {
 
   makeChart(dcChart,dim,group) {
     dcChart.width(this.width)
-      .height(0.65*this.width)
+      .height(height*0.65)
+      //.height(0.65*this.width)
       //.margins(margin)
       .x(d3.scaleTime()
           .domain([new Date(2008, 0, 1, 0), new Date(2009, 0, 1, 12)]))
@@ -113,7 +115,7 @@ class bChart {
   makeChart(dcChart,dim,group) {
 
     dcChart.width(this.width)
-        .height(0.6*this.width)
+        .height(0.3*height)
         .margins(margin)
         .mouseZoomable(false)
         .dimension(dim)
@@ -157,7 +159,7 @@ class rChart {
   makeChart(dcChart,dim,group) {
 
     dcChart.width(this.width)
-      .height(0.1*this.width)
+      .height(0.1*height)
       //.margins(margin)
       .mouseZoomable(false)
       .dimension(dim)
@@ -241,8 +243,6 @@ class tabChart {
     }
 
     dcChart.width(this.width)
-        //.height(0.5*this.width)
-        //.margins({top: 0, right: 40, bottom: 20, left: 40})
         .dimension(dim)
         .size(5)
         .order(ordering)

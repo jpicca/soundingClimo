@@ -6,9 +6,9 @@ $("area").on("click", function() {
 });
 
 // On Time Change
-$("#soundingtimes input[type='radio']").on("change", function() {
+$("#soundingtimes input[type='radio']").on("change", async function() {
   updateSoundTime();
-  updateQuantiles();
+  await updateQuantiles();
   updateData();
 });
 

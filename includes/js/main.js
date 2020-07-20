@@ -50,6 +50,16 @@ function updateYaxisBounds() {
   var ymax = $("#ymax").val(); dm.ymax( ymax = (ymax === "") ? 'ymax' : +ymax );
 };
 
+// Need to return a resolved promise for async jq call functions
+function updateQuantiles() {
+  return new Promise((resolve,reject) => {
+
+    dm.createDefaultQuantiles();
+
+    resolve();
+  })
+}
+
 // Update the data in the DataManager
 async function updateData() {
 
