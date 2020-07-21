@@ -101,7 +101,7 @@ async function updateData(newFile=true) {
   finishedFormat();
 };
 
-function refreshChart(type) {
+async function refreshChart(type) {
 
   switch (type) {
     case 'time' :
@@ -123,10 +123,20 @@ function refreshChart(type) {
       } 
       // Time is 00 or 12
       else {
+        console.log(`refresh chart with **${newTime}**`)
+        
+        // Need to re-run quantiles (can't just filter since the smoothed values will change)
+        await dm.createDefaultQuantiles(false);
+
+        console.log('quantiles calculated')
+
         dm.getUserDim().filter(d => { return d.getHours() == newTime });
         
+        console.log('user dim filtered')
         // Redraw all charts (except time series)
         dc.redrawAll();
+
+        console.log('all redrawn')
 
         // Time series has to use a special function that utilizes temp crossfilters/dimensions
         dm.updateTSGroup();
@@ -149,7 +159,7 @@ $(document).ready(function() {
   updateSoundTime();
   updateSoundParm();
   updateSoundParmUnit();
-  updateSmoothPeriod();
+  //updateSmoothPeriod();
   updateYaxisBounds();
   updateData();
   

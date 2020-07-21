@@ -176,7 +176,7 @@ d3Edge.dataManager = function module() {
     };
   };
 
-  exports.createDefaultQuantiles = function() {
+  exports.createDefaultQuantiles = function(init=true) {
     var loopParms, tvals;
     qdata.p00 = []; qdata.p01 = []; qdata.p10 = [];
     qdata.p25 = []; qdata.p50 = []; qdata.p75 = [];
@@ -187,13 +187,19 @@ d3Edge.dataManager = function module() {
     return new Promise((resolve,reject) => {
 
       for (i = loopParms[0]; i < 367; i+=loopParms[1]) {
+      
         tvals = []
 
         // Filter raw data for current day of year
         _tvals = raw_data.filter(d => { return dateToDay(d.date) == i })
 
+        // *** May be able to make more efficient with another filter, versus looping / pushing ***
         _tvals.forEach(function(p) { if (p.val >  -999.) {tvals.push(p.val); }; });
+
+        // Filter 0s from values if criteria is met
         if (filter0s && $.inArray(soundParm, filter0Fields) > -1) { tvals = tvals.filter(function(p) { return p > 0; })};
+        
+        // Sort the values to prep for quantile calc
         tvals = tvals.sort(function(a,b) { return a-b; });
         qdata.push()
         qdata.p00.push(d3.min(tvals));
@@ -236,13 +242,19 @@ d3Edge.dataManager = function module() {
         data.push(q);
       };
 
+      console.log(init)
+
+      if (init) {
+        exports.createDimsGroups()
+      };
+
+      /*
       // ** Add our data to crossfilter **
       // Use a filter to only add non-missing data
       fdata.add(raw_data.filter(d => { return d.val > -999 }));
       //fdata.groupAll();
 
       // New dimensions
-      //indexDim = fdata.dimension(d => d.dayIdx)
       barDim = fdata.dimension(d => d.val)
       dateIdxDim = fdata.dimension(d => d.idxDate)
 
@@ -252,12 +264,9 @@ d3Edge.dataManager = function module() {
 
       // ** Make sure to update the parmparm values **
       binwidth = parmParm[$('#sndparam option:selected').text()]
-      //var rangeBinWidth = 0.5;
 
       // New groups
       barGroup = barDim.group(d => { return binwidth * Math.floor(d/binwidth)});
-      //groupByDayRange = indexDim.group(d => { return data[d].index/rangeBinWidth });
-
       groupByDateCount = dateIdxDim.group();
 
       //groupByDay = indexDim.group().reduce(
@@ -294,7 +303,7 @@ d3Edge.dataManager = function module() {
         },
         () => ({count: 0, index:0, p00: 0, p01: 0, p10: 0,
            p25: 0, p50: 0, mean: 0, p75: 0, p90: 0, p99: 0, p100: 0})
-      )
+      ) */
 
       // Resolve promise once quantiles are calculated
       resolve();
@@ -302,7 +311,96 @@ d3Edge.dataManager = function module() {
 
   };
 
-  // This internal method is used to create temporary crossfilter/dimension
+  exports.createDimsGroups = function () {
+
+    fdata.add(raw_data.filter(d => { return d.val > -999 }));
+
+    // New dimensions
+    barDim = fdata.dimension(d => d.val)
+    dateIdxDim = fdata.dimension(d => d.idxDate)
+
+    // Create an identical dimension to allow user to filter via sounding time radio button
+    // Charts don't "listen" to their own dimension (to prevent weird actions)
+    userFilterDim = fdata.dimension(d => d.idxDate);
+
+    // ** Make sure to update the parmparm values **
+    binwidth = parmParm[$('#sndparam option:selected').text()]
+
+    // New groups
+    barGroup = barDim.group(d => { return binwidth * Math.floor(d/binwidth)});
+    groupByDateCount = dateIdxDim.group();
+
+    groupByDay = dateIdxDim.group().reduce(
+      (p,v) => {
+        
+        let formatIdx = 0;
+        // Check sounding time to format indexing
+        switch (soundTime) {
+          case '00z' :
+            formatIdx = v.dayIdx/2;
+            break;
+          case '12z' :
+            formatIdx = Math.floor(v.dayIdx/2);
+            break;
+          case 'all' :
+            formatIdx = v.dayIdx;
+            break;
+        }
+
+        //console.log(formatIdx)
+
+        ++p.count
+        p.index = data[formatIdx].index
+        p.p00 = data[formatIdx].p00
+        p.p01 = data[formatIdx].p01
+        p.p10 = data[formatIdx].p10
+        p.p25 = data[formatIdx].p25
+        p.p50 = data[formatIdx].p50
+        p.mean = data[formatIdx].mean
+        p.p75 = data[formatIdx].p75
+        p.p90 = data[formatIdx].p90
+        p.p99 = data[formatIdx].p99
+        p.p100 = data[formatIdx].p100
+        return p;
+      },
+      (p,v) => {
+        // let formatIdx = 0;
+        // // Check sounding time to format indexing
+        // switch (soundTime) {
+        //   case '00z' :
+        //     formatIdx = v.dayIdx/2;
+        //     break;
+        //   case '12z' :
+        //     formatIdx = Math.floor(v.dayIdx/2);
+        //     break;
+        //   case 'all' :
+        //     formatIdx = v.dayIdx;
+        //     break;
+        // }
+
+        // console.log(`${soundTime} -- ${v.dayIdx} -- ${v.idxDate} -- ${formatIdx}`)
+
+        // --p.count
+        // p.index = p.index
+        // p.p00 = data[formatIdx].p00
+        // p.p01 = data[formatIdx].p01
+        // p.p10 = data[formatIdx].p10
+        // p.p25 = data[formatIdx].p25
+        // p.p50 = data[formatIdx].p50
+        // p.mean = p.mean
+        // p.p75 = data[formatIdx].p75
+        // p.p90 = data[formatIdx].p90
+        // p.p99 = data[formatIdx].p99
+        // p.p100 = data[formatIdx].p100
+        return p;
+      },
+      () => ({count: 0, index:0, p00: 0, p01: 0, p10: 0,
+         p25: 0, p50: 0, mean: 0, p75: 0, p90: 0, p99: 0, p100: 0})
+    )
+
+  }
+
+  // This method is used to create temporary crossfilter/dimension
   // in order to update the time series chart
   exports.updateTSGroup = function () {
 
@@ -310,6 +408,71 @@ d3Edge.dataManager = function module() {
     let tempXF = crossfilter(dateIdxDim.top(Infinity));
     let tempDim = tempXF.dimension(d => d.idxDate)
 
+    let newGroup = tempDim.group().reduce(
+      (p,v) => {
+
+        let formatIdx = 0;
+        // Check sounding time to format indexing
+        switch (soundTime) {
+          case '00z' :
+            formatIdx = v.dayIdx/2;
+            break;
+          case '12z' :
+            formatIdx = Math.floor(v.dayIdx/2);
+            break;
+          case 'all' :
+            formatIdx = v.dayIdx;
+            break;
+        }
+
+        ++p.count
+        p.index = data[formatIdx].index
+        p.p00 = data[formatIdx].p00
+        p.p01 = data[formatIdx].p01
+        p.p10 = data[formatIdx].p10
+        p.p25 = data[formatIdx].p25
+        p.p50 = data[formatIdx].p50
+        p.mean = data[formatIdx].mean
+        p.p75 = data[formatIdx].p75
+        p.p90 = data[formatIdx].p90
+        p.p99 = data[formatIdx].p99
+        p.p100 = data[formatIdx].p100
+        return p;
+      },
+      (p,v) => {
+        // let formatIdx = 0;
+        // // Check sounding time to format indexing
+        // switch (soundTime) {
+        //   case '00z' :
+        //     formatIdx = v.dayIdx/2;
+        //     break;
+        //   case '12z' :
+        //     formatIdx = Math.floor(v.dayIdx/2);
+        //     break;
+        //   case 'all' :
+        //     formatIdx = v.dayIdx;
+        //     break;
+        // }
+
+        // --p.count
+        // p.index = data[formatIdx].index
+        // p.p00 = data[formatIdx].p00
+        // p.p01 = data[formatIdx].p01
+        // p.p10 = data[formatIdx].p10
+        // p.p25 = data[formatIdx].p25
+        // p.p50 = data[formatIdx].p50
+        // p.mean = data[formatIdx].mean
+        // p.p75 = data[formatIdx].p75
+        // p.p90 = data[formatIdx].p90
+        // p.p99 = data[formatIdx].p99
+        // p.p100 = data[formatIdx].p100
+        return p;
+      },
+      () => ({count: 0, index:0, p00: 0, p01: 0, p10: 0,
+         p25: 0, p50: 0, mean: 0, p75: 0, p90: 0, p99: 0, p100: 0})
+    )
+
+    /*
     let newGroup = tempDim.group().reduce(
       (p,v) => {
         ++p.count
@@ -343,7 +506,7 @@ d3Edge.dataManager = function module() {
       },
       () => ({count: 0, index:0, p00: 0, p01: 0, p10: 0,
          p25: 0, p50: 0, mean: 0, p75: 0, p90: 0, p99: 0, p100: 0})
-    )
+    )*/
 
     //console.log(newGroup.top(10))
     chart.makeChart(timeSeries,tempDim,newGroup);
