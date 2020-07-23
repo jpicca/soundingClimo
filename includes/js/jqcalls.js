@@ -12,7 +12,7 @@ $("#stn").on("change", function() {
   loadingFormat();
 
   updateStation();
-  updateData();
+  updateData(false);
 });
 
 // On Time Change

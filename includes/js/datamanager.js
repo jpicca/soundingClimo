@@ -136,6 +136,14 @@ d3Edge.dataManager = function module() {
 
           d.index = i;
           d.date = parseDate(d.date);
+
+          // Coerce 03Z to 00Z and 15Z to 12Z
+          if (d.date.getHours() == 3) {
+            d.date.setHours(0)
+          } else if (d.date.getHours() == 15) {
+            d.date.setHours(12)
+          }
+
           d.val = +d.val;
 
           // Create a 0-731 index to access quantile values
@@ -242,8 +250,7 @@ d3Edge.dataManager = function module() {
         data.push(q);
       };
 
-      console.log(init)
-
+      // If we're loading new data, create new crossfilter dimensions/groups
       if (init) {
         exports.createDimsGroups()
       };
@@ -313,9 +320,10 @@ d3Edge.dataManager = function module() {
 
   exports.createDimsGroups = function () {
 
+    // Remove any missing data before adding to the crossfilter
     fdata.add(raw_data.filter(d => { return d.val > -999 }));
 
-    // New dimensions
+    // New dimensions for the bar chart and the time series/range charts
     barDim = fdata.dimension(d => d.val)
     dateIdxDim = fdata.dimension(d => d.idxDate)
 
@@ -324,13 +332,18 @@ d3Edge.dataManager = function module() {
     userFilterDim = fdata.dimension(d => d.idxDate);
 
     // ** Make sure to update the parmparm values **
+    // Have default binwidths for the different parameters
     binwidth = parmParm[$('#sndparam option:selected').text()]
 
-    // New groups
+    // New groups for the bar chart and the range chart
     barGroup = barDim.group(d => { return binwidth * Math.floor(d/binwidth)});
     groupByDateCount = dateIdxDim.group();
 
+    // New group for the time series chart
+    // Use the sound time to create the right index to get the proper entry from
+    // the quantile object (data variable)
     groupByDay = dateIdxDim.group().reduce(
+      // On addition of records, set values for their group
       (p,v) => {
         
         let formatIdx = 0;
@@ -347,8 +360,6 @@ d3Edge.dataManager = function module() {
             break;
         }
 
-        //console.log(formatIdx)
-
         ++p.count
         p.index = data[formatIdx].index
         p.p00 = data[formatIdx].p00
@@ -363,37 +374,15 @@ d3Edge.dataManager = function module() {
         p.p100 = data[formatIdx].p100
         return p;
       },
+      // When records are filtered out, we don't want to progressively update the time
+      // series chart, bc it would look very weird / not be helpful.
+      // Therefore, simply return the values as they are... I think this is the best way
+      // to handle this.
       (p,v) => {
-        // let formatIdx = 0;
-        // // Check sounding time to format indexing
-        // switch (soundTime) {
-        //   case '00z' :
-        //     formatIdx = v.dayIdx/2;
-        //     break;
-        //   case '12z' :
-        //     formatIdx = Math.floor(v.dayIdx/2);
-        //     break;
-        //   case 'all' :
-        //     formatIdx = v.dayIdx;
-        //     break;
-        // }
 
-        // console.log(`${soundTime} -- ${v.dayIdx} -- ${v.idxDate} -- ${formatIdx}`)
-
-        // --p.count
-        // p.index = p.index
-        // p.p00 = data[formatIdx].p00
-        // p.p01 = data[formatIdx].p01
-        // p.p10 = data[formatIdx].p10
-        // p.p25 = data[formatIdx].p25
-        // p.p50 = data[formatIdx].p50
-        // p.mean = p.mean
-        // p.p75 = data[formatIdx].p75
-        // p.p90 = data[formatIdx].p90
-        // p.p99 = data[formatIdx].p99
-        // p.p100 = data[formatIdx].p100
         return p;
       },
+      // Not sure if this initialization is needed.
       () => ({count: 0, index:0, p00: 0, p01: 0, p10: 0,
          p25: 0, p50: 0, mean: 0, p75: 0, p90: 0, p99: 0, p100: 0})
     )
@@ -401,7 +390,10 @@ d3Edge.dataManager = function module() {
   }
 
   // This method is used to create temporary crossfilter/dimension
-  // in order to update the time series chart
+  // in order to update the time series chart.
+  // We do this because our original dimension for the time series 
+  // does not allow for removal of values (to avoid weird plotting)
+  // So we need a new temp dimension and grouping to re-create the chart.
   exports.updateTSGroup = function () {
 
     //console.log(dateIdxDim.top(10))
@@ -440,75 +432,14 @@ d3Edge.dataManager = function module() {
         return p;
       },
       (p,v) => {
-        // let formatIdx = 0;
-        // // Check sounding time to format indexing
-        // switch (soundTime) {
-        //   case '00z' :
-        //     formatIdx = v.dayIdx/2;
-        //     break;
-        //   case '12z' :
-        //     formatIdx = Math.floor(v.dayIdx/2);
-        //     break;
-        //   case 'all' :
-        //     formatIdx = v.dayIdx;
-        //     break;
-        // }
 
-        // --p.count
-        // p.index = data[formatIdx].index
-        // p.p00 = data[formatIdx].p00
-        // p.p01 = data[formatIdx].p01
-        // p.p10 = data[formatIdx].p10
-        // p.p25 = data[formatIdx].p25
-        // p.p50 = data[formatIdx].p50
-        // p.mean = data[formatIdx].mean
-        // p.p75 = data[formatIdx].p75
-        // p.p90 = data[formatIdx].p90
-        // p.p99 = data[formatIdx].p99
-        // p.p100 = data[formatIdx].p100
         return p;
       },
       () => ({count: 0, index:0, p00: 0, p01: 0, p10: 0,
          p25: 0, p50: 0, mean: 0, p75: 0, p90: 0, p99: 0, p100: 0})
     )
 
-    /*
-    let newGroup = tempDim.group().reduce(
-      (p,v) => {
-        ++p.count
-        p.index = data[v.dayIdx].index
-        p.p00 = data[v.dayIdx].p00
-        p.p01 = data[v.dayIdx].p01
-        p.p10 = data[v.dayIdx].p10
-        p.p25 = data[v.dayIdx].p25
-        p.p50 = data[v.dayIdx].p50
-        p.mean = data[v.dayIdx].mean
-        p.p75 = data[v.dayIdx].p75
-        p.p90 = data[v.dayIdx].p90
-        p.p99 = data[v.dayIdx].p99
-        p.p100 = data[v.dayIdx].p100
-        return p;
-      },
-      (p,v) => {
-        --p.count
-        p.index = data[v.dayIdx].index
-        p.p00 = data[v.dayIdx].p00
-        p.p01 = data[v.dayIdx].p01
-        p.p10 = data[v.dayIdx].p10
-        p.p25 = data[v.dayIdx].p25
-        p.p50 = data[v.dayIdx].p50
-        p.mean = data[v.dayIdx].mean
-        p.p75 = data[v.dayIdx].p75
-        p.p90 = data[v.dayIdx].p90
-        p.p99 = data[v.dayIdx].p99
-        p.p100 = data[v.dayIdx].p100
-        return p;
-      },
-      () => ({count: 0, index:0, p00: 0, p01: 0, p10: 0,
-         p25: 0, p50: 0, mean: 0, p75: 0, p90: 0, p99: 0, p100: 0})
-    )*/
-
-    //console.log(newGroup.top(10))
+    // Re-create the chart once we have our new dimension and group
     chart.makeChart(timeSeries,tempDim,newGroup);
 
   };

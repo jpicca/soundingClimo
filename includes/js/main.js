@@ -16,16 +16,12 @@ var minTab = new dc.DataTable('#min-table')
 
 // Updated Whether DataManager is operating on Raw or Filtered Files
 function updateFiltered() {
-  //console.log($("#raw-vs-filter input[type='radio']:checked").val().toLowerCase())
   dm.filteredFiles($("#raw-vs-filter input[type='radio']:checked").val().toLowerCase())
 };
 
 // Update the DataManager station ID
 function updateStation() { 
   dm.station($("#stn").val().toLowerCase());
-
-  /* Commented out period of record update -- need to change */
-  //updatePOR();
 };
 
 // When Sounding Time is updated, set new time and updated the smoother
@@ -60,47 +56,55 @@ function updateQuantiles() {
   })
 }
 
-// Update the data in the DataManager
-async function updateData(newFile=true) {
-
-  /* Using promise resolve */
+// Update the data in the DataManager in async fashion
+async function updateData(init=true) {
 
   // Await the resolution of the promise in readData before continuing
-  // Introduced an if statement -- if we're not reading a new file, we don't need to run
-  // readData (I think)
+  await dm.readData(dm.fileName());
 
-  if (newFile) {
-  
-    await dm.readData(dm.fileName());
+  // Await the resolution of quantile creation before continuing
+  await dm.createDefaultQuantiles();
+
+  // Check if we need to carry over a time filter from a prior visualization
+  if (dm.soundTime() != 'all') {
+    let time = +$("#soundingtimes input[type='radio']:checked").val().slice(0,2);
+    dm.getUserDim().filter(d => { return d.getHours() == time });
+  }
+
+  // Check if this is the initial load of the page or not
+  // If it is the initial load, we can make time series chart the normal way
+  // If it isn't, we need to make it the temp way (due to the somewhat jury-rigged way
+  // that Joey set up the time series grouping)
+
+  if (init) {
+
+    chart.makeChart(timeSeries,dm.getDateIdxDim(),dm.getGroupByDay());
+
+  } else {
+
+    dm.updateTSGroup();
 
   }
 
-  await dm.createDefaultQuantiles();
+  // Re-create all other charts
+  chart2.makeChart(hist,dm.getbarDim(),dm.getbarGroup());
+  chart3.makeChart(range,dm.getDateIdxDim(),dm.getGroupByDateCount());
+  chart4.makeChart(maxTab,dm.getbarDim(),dm.getUnit());
+  chart5.makeChart(minTab,dm.getbarDim(),dm.getUnit(),false);
 
-  console.log("Quantiles updated!")
-
+  // Update the main header title
   chart.setTitle(dm.soundTime().toUpperCase() + " Soundings for " + dm.station()
         .toUpperCase())
         .setYLabel($('#sndparam option:selected').text());
 
-  // Set chart title
+  // Set the html element with the above created title
   $('#svg-title').text(chart.title);
 
-  // Make initial charts
-  //chart.makeChart(timeSeries,dm.getindexDim(),dm.getGroupByDay());
-
-  chart.makeChart(timeSeries,dm.getDateIdxDim(),dm.getGroupByDay());
-
-  chart2.makeChart(hist,dm.getbarDim(),dm.getbarGroup());
-  
-  chart3.makeChart(range,dm.getDateIdxDim(),dm.getGroupByDateCount());
-  
-  chart4.makeChart(maxTab,dm.getbarDim(),dm.getUnit());
-  chart5.makeChart(minTab,dm.getbarDim(),dm.getUnit(),false);
-
+  // Return the svg holder to full opacity and hide loading text
   finishedFormat();
 };
 
+// An async function to simply update charts (not load new data) when time or plot options are changed
 async function refreshChart(type) {
 
   switch (type) {
@@ -110,40 +114,44 @@ async function refreshChart(type) {
       // If newTime is coerced to int, it'll be 0 or 12; otherwise 'all' is changed to NaN
       // Time is all
       if (isNaN(newTime)) {
-        
+
+        // Need to make sure we've created the right quantiles before any filter changes
+        await dm.createDefaultQuantiles(false);
+
         // Clear the time filters
-        dm.getUserDim().filter()
+        dm.getUserDim().filter();
 
         // Redraw all charts (except for time series)
         dc.redrawAll();
 
         // Update time series chart with original dimension / group
-        chart.makeChart(timeSeries,dm.getDateIdxDim(),dm.getGroupByDay());
+        dm.updateTSGroup();
 
       } 
       // Time is 00 or 12
       else {
-        console.log(`refresh chart with **${newTime}**`)
         
-        // Need to re-run quantiles (can't just filter since the smoothed values will change)
+        // Need to make sure we've created the right quantiles before any filter changes
         await dm.createDefaultQuantiles(false);
 
-        console.log('quantiles calculated')
-
+        // Filter for the proper hour
         dm.getUserDim().filter(d => { return d.getHours() == newTime });
         
-        console.log('user dim filtered')
-        // Redraw all charts (except time series)
+        // Redraw all charts (except time series... sort of)
         dc.redrawAll();
-
-        console.log('all redrawn')
 
         // Time series has to use a special function that utilizes temp crossfilters/dimensions
         dm.updateTSGroup();
       }
 
       // Update title
-      $('#svg-title').text(`${dm.soundTime().toUpperCase()} Soundings for ${dm.station().toUpperCase()}`)
+      // Update the main header title
+      chart.setTitle(dm.soundTime().toUpperCase() + " Soundings for " + dm.station()
+        .toUpperCase())
+        .setYLabel($('#sndparam option:selected').text());
+
+      // Set the html element with the above created title
+      $('#svg-title').text(chart.title);
 
       break;
   }
