@@ -19,6 +19,9 @@ function updateFiltered() {
   dm.filteredFiles($("#raw-vs-filter input[type='radio']:checked").val().toLowerCase())
 };
 
+// Update DataManager as to whether 0 values need to be filtered
+function updateFilter() { dm.filter0($("#filter0").prop("checked")); };
+
 // Update the DataManager station ID
 function updateStation() { 
   dm.station($("#stn").val().toLowerCase());
@@ -84,6 +87,14 @@ async function updateData(init=true) {
 
     dm.updateTSGroup();
 
+  }
+
+  // Check if the 0 filter is turned on
+  // If it is, filter out vales less than 1 (this will filter out values 0-1 ... prob need to
+  // add an entry field to allow for threshold entry)
+  
+  if ($('#filter0').is(':checked')) {
+    dm.getZeroFilter().filter(d => { return d > 0 });
   }
 
   // Re-create all other charts

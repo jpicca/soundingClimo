@@ -32,10 +32,26 @@ $("#raw-vs-filter input[type='radio']").on("change", function() {
 
 // Change Parameter
 $("#sndparam").on("change", function() {
-  if ($('#sndparam option:selected').val().toLowerCase() != "pass") {
+
+  let parm = $('#sndparam option:selected').val().toLowerCase();
+  let canFilter = $.inArray(parm,dm.get0List())
+
+  // Only enable the 0 filter checkbox if it's filterable parm
+  // and make sure box is unchecked if it's not filterable
+  if (canFilter == -1) {
+    $('#filter0').prop('checked',false);
+    $('#filter0').attr('disabled',true);
+  } else {
+    $('#filter0').attr('disabled',false);
+  }
+
+  if (parm != "pass") {
+
+    loadingFormat();
+
     updateSoundParm();
     updateSoundParmUnit();
-    updateData();
+    updateData(false);
   };
 });
 
@@ -52,13 +68,14 @@ $("#movave").on("change", function() {
   updateData();
 });
 
-// Only Display Moving Averages
+// Filter 0s
 $("#filter0").on("change", function() {
   updateFilter();
-  updateData();
+
+  updateData(false);
 });
 
-// Filter0s
+// Only display moving averages
 $("#dateplot").on("change", function() {
   if ($("#dateplot").prop("checked")) {
     $("#p00").hide();

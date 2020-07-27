@@ -124,34 +124,42 @@
           <option value="TEMP925" unit="C">925 mb Temperature (C)</option>
           <option value="DEWPOINT925" unit="C">925 mb Dewpoint (C)</option>
           <option value="MIXRATIO925" unit="g/kg">925 mb Mixing Ratio (g/kg)</option>
-          <option value="WINDSPD925" unit="kts">925 mb Wind Speed (kts)</option>
+          <option value="WINDSPD925" unit="kt">925 mb Wind Speed (kt)</option>
           <option value="HEIGHT850" unit="m">850 mb Height (m)</option>
           <option value="TEMP850" unit="C">850 mb Temperature (C)</option>
           <option value="DEWPOINT850" unit="C">850 mb Dewpoint (C)</option>
           <option value="MIXRATIO850" unit="g/kg">850 mb Mixing Ratio (g/kg)</option>
-          <option value="WINDSPD850" unit="kts">850 mb Wind Speed (kts)</option>
+          <option value="WINDSPD850" unit="kt">850 mb Wind Speed (kt)</option>
           <option value="HEIGHT700" unit="m">700 mb Height (m)</option>
           <option value="TEMP700" unit="C">700 mb Temperature (C)</option>
           <option value="DEWPOINT700" unit="C">700 mb Dewpoint (C)</option>
           <option value="MIXRATIO700" unit="g/kg">700 mb Mixing Ratio (g/kg)</option>
-          <option value="WINDSPD700" unit="kts">700 mb Wind Speed (kts)</option>
+          <option value="WINDSPD700" unit="kt">700 mb Wind Speed (kt)</option>
           <option value="HEIGHT500" unit="m">500 mb Height (m)</option>
           <option value="TEMP500" unit="C">500 mb Temperature (C)</option>
           <option value="DEWPOINT500" unit="C">500 mb Dewpoint (C)</option>
           <option value="MIXRATIO500" unit="g/kg">500 mb Mixing Ratio (g/kg)</option>
-          <option value="WINDSPD500" unit="kts">500 mb Wind Speed (kts)</option>
+          <option value="WINDSPD500" unit="kt">500 mb Wind Speed (kt)</option>
           <option value="HEIGHT300" unit="m">300 mb Height (m)</option>
           <option value="TEMP300" unit="C">300 mb Temperature (C)</option>
-          <option value="WINDSPD300" unit="kts">300 mb Wind Speed (kts)</option>
+          <option value="WINDSPD300" unit="kt">300 mb Wind Speed (kt)</option>
           <option value="HEIGHT250" unit="m">250 mb Height (m)</option>
           <option value="TEMP250" unit="C">250 mb Temperature (C)</option>
-          <option value="WINDSPD250" unit="kts">250 mb Wind Speed (kts)</option>
+          <option value="WINDSPD250" unit="kt">250 mb Wind Speed (kt)</option>
           <option value="PASS">---Instability Parameters---</option>
-          <option value="MLCAPE" unit="J/kg">Mixed Layer CAPE (J/kg)</option>
-          <option value="MLCIN" unit="J/kg">Mixed Layer CIN (J/kg)</option>
+          <option selected="selected" value="MLCAPE" unit="J/kg">Mixed Layer CAPE (J/kg)</option>
+          
+          <!-- Bad data exist in ML CIN... values are positive/too large -->
+          <!-- <option value="MLCIN" unit="J/kg">Mixed Layer CIN (J/kg)</option> -->
+
           <option value="MLLCL" unit="m">Mixed Layer LCL (m)</option>
-          <option value="MLLFC" unit="m">Mixed Layer LFC (m)</option>
-          <option value="MLLI" unit="C">Mixed Layer LI (C)</option>
+
+          <!-- Bad data exist in ML LFC csvs... values do not seem like LFCs (negative values exist) -->
+          <!-- <option value="MLLFC" unit="m">Mixed Layer LFC (m)</option> -->
+
+          <!-- Bad data in ML LI csvs... these seem like CAPE or some level data -->
+          <!-- <option value="MLLI" unit="C">Mixed Layer LI (C)</option> -->
+
           <option value="MUCAPE" unit="J/kg">Most Unstable CAPE (J/kg)</option>
           <option value="MUCIN" unit="J/kg">Most Unstable CIN (J/kg)</option>
           <option value="MULCL" unit="m">Most Unstable LCL (m)</option>
@@ -170,16 +178,16 @@
           <option value="LAPSERATE36" unit="C/km">3-6 km AGL Lapse Rate (C/km)</option>
           <option value="LAPSERATE03" unit="C/km">0-3 km AGL Lapse Rate (C/km)</option>
           <option value="PASS">---Kinematic Parameters---</option>
-          <option value="SHEAR06" unit="kts">0-6 km AGL Bulk Wind Shear (kts)</option>
-          <option value="SHEAR03" unit="kts">0-3 km AGL Bulk Wind Shear(kts)</option>
-          <option value="SHEAR01" unit="kts">0-1 km AGL Bulk Wind Shear (kts)</option>
+          <option value="SHEAR06" unit="kt">0-6 km AGL Bulk Wind Shear (kt)</option>
+          <option value="SHEAR03" unit="kt">0-3 km AGL Bulk Wind Shear(kt)</option>
+          <option value="SHEAR01" unit="kt">0-1 km AGL Bulk Wind Shear (kt)</option>
           <option value="EFF_SRH" unit="m^2/s^2" disabled>Effective SRH (m^2/s^2)</option>
           <option value="SRH03" unit="m^2/s^2">0-3 km SRH (m^2/s^2)</option>
           <option value="SRH01" unit="m^2/s^2">0-1 km SRH (m^2/s^2)</option>
-          <option value="SFC_UWND" unit="kts (U Component)">Surface Wind Speed (U component; kts)</option>
-          <option value="SFC_VWND" unit="kts (V Component)">Surface Wind Speed (V component; kts)</option>
+          <option value="SFC_UWND" unit="kt (U Component)">Surface Wind Speed (U component; kt)</option>
+          <option value="SFC_VWND" unit="kt (V Component)">Surface Wind Speed (V component; kt)</option>
           <option value="PASS">---Moisture Parameters---</option>
-          <option selected="selected" value="PW" unit="in">Precipitable Water (inches)</option>
+          <option value="PW" unit="in">Precipitable Water (inches)</option>
           <option value="MIXRATIO03KM" unit="g/kg">0-3 km Mixing Ratio (g/kg)</option>
           <option value="MIXRATIO01KM" unit="g/kg">0-1 km Mixing Ratio (g/kg)</option>
           <option value="MIXRATIOSFC850" unit="g/kg">Surface-850 mb Layer Mixing Ratio (g/kg)</option>
@@ -188,7 +196,7 @@
           <option value="FOSBERG" unit="">Fosberg Index</option>
           <option value="SFC_RH" unit="%">Surface Relative Humidity (%)</option>
           <option value="SFC_T" unit="F">Surface Temperature (F)</option>
-          <option value="SFCWINDSPD" unit="kts">Surface Wind Speed (kts)</option>
+          <option value="SFCWINDSPD" unit="kt">Surface Wind Speed (kt)</option>
           <option value="PASS">---Other Derived Parameters---</option>
           <option value="STP_FIX" unit="">Fixed-Layer Sig-Tornado Parameter</option>
           <option value="STP_EFF" unit="" disabled>Effective-Layer Sig-Tornado Parameter</option>
@@ -257,6 +265,7 @@
                 </div>
               </div>
               <div class='col-sm-4' id='right-column'>
+                
               <div class='row'>
               <div class='row col-sm-12'>
                 <span id='sample-date' class='table-title'>Data Readout</span>
@@ -300,7 +309,7 @@
 
                 </div>
               </div>
-                
+              <hr />
                 <div class='row'>
                   <div class='row col-sm-12' style='margin-bottom: 1rem;'>
                     <span class='table-title'>Selected Time Range Max/Min</span>
@@ -320,6 +329,7 @@
 
                   </div>
                 </div>
+                
               </div>
             </div>
           </div>

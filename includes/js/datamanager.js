@@ -207,6 +207,11 @@ d3Edge.dataManager = function module() {
         // Filter 0s from values if criteria is met
         if (filter0s && $.inArray(soundParm, filter0Fields) > -1) { tvals = tvals.filter(function(p) { return p > 0; })};
         
+        // When we filter 0s, if there are no values remaining, it will end up pushing "undefined"
+        // into the quantile calc. This will break the time series plotting. Soo just tossing in a 0
+        // to fix this problem for the time being.
+        if (!tvals.length) { tvals.push(0) }
+
         // Sort the values to prep for quantile calc
         tvals = tvals.sort(function(a,b) { return a-b; });
         qdata.push()
@@ -330,10 +335,11 @@ d3Edge.dataManager = function module() {
     // Create an identical dimension to allow user to filter via sounding time radio button
     // Charts don't "listen" to their own dimension (to prevent weird actions)
     userFilterDim = fdata.dimension(d => d.idxDate);
+    zeroFilterDim = fdata.dimension(d => d.val);
 
     // ** Make sure to update the parmparm values **
     // Have default binwidths for the different parameters
-    binwidth = parmParm[$('#sndparam option:selected').text()]
+    binwidth = parmParm[$('#sndparam option:selected').text()].bin;
 
     // New groups for the bar chart and the range chart
     barGroup = barDim.group(d => { return binwidth * Math.floor(d/binwidth)});
@@ -444,16 +450,17 @@ d3Edge.dataManager = function module() {
 
   };
 
-  exports.getXFdata = function () { return fdata };
-  exports.getUserDim = function () { return userFilterDim };
+  exports.getXFdata = function () { return fdata; };
+  exports.getUserDim = function () { return userFilterDim; };
   //exports.getindexDim = function () { return indexDim };
-  exports.getbarDim = function () { return barDim };
-  exports.getDateIdxDim = function () { return dateIdxDim };
+  exports.getbarDim = function () { return barDim; };
+  exports.getDateIdxDim = function () { return dateIdxDim; };
+  exports.getZeroFilter = function () { return zeroFilterDim; }
 
-  exports.getGroupByDay = function () { return groupByDay };
-  exports.getGroupByDayRange = function() { return groupByDayRange };
-  exports.getbarGroup = function () { return barGroup };
-  exports.getGroupByDateCount = function () { return groupByDateCount };
+  exports.getGroupByDay = function () { return groupByDay; };
+  exports.getGroupByDayRange = function() { return groupByDayRange; };
+  exports.getbarGroup = function () { return barGroup; };
+  exports.getGroupByDateCount = function () { return groupByDateCount; };
 
   exports.getData = function() { return data; };
   exports.getRawData = function() { return raw_data; };
@@ -461,6 +468,7 @@ d3Edge.dataManager = function module() {
   exports.getObs = function() { return obs; };
 
   exports.getUnit = function() { return soundParmUnit; };
+  exports.get0List = function() { return filter0Fields; };
   
   return exports;
 

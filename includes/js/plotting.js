@@ -24,6 +24,32 @@ class tsChart {
   // ---------- new makechart -----------
 
   makeChart(dcChart,dim,group) {
+
+    // dcjs's elastic y sets the min at 0 if there are no negative values
+    // This causes too large of a y domain if all the values are much higher
+    // than 0. So instead, I've set some logic to create appropriate y ranges
+
+    //let min = parmParm[$('#sndparam option:selected').text()].range[0]
+    let minVal = dm.getbarDim().bottom(1)[0].val
+    let maxVal = dm.getbarDim().top(1)[0].val
+    let rangeVal = maxVal - minVal;
+    let blankDistCoef = 0.2
+    let buffer = .01*rangeVal;
+    let min;
+    let max;
+
+    if (minVal >= 0) {
+      max = maxVal + buffer;
+      min = (rangeVal*blankDistCoef > minVal) ? 0 : minVal - buffer;
+    } else if (maxVal < 0) {
+      // opposite of logic in the block above
+      max = (rangeVal*blankDistCoef > -maxVal) ? 0 : maxVal + buffer;
+      min = minVal - buffer;
+    } else {
+      max = maxVal + buffer;
+      min = minVal - buffer;
+    }
+
     dcChart.width(this.width)
       .height(height*0.65)
       //.height(0.65*this.width)
@@ -34,7 +60,9 @@ class tsChart {
       .dimension(dim)
       .group(group)
       .yAxisLabel($('#sndparam option:selected').text())
-      .elasticY(true)
+      .elasticY(false)
+      .y(d3.scaleLinear()
+          .domain([min,max]))
       .rangeChart(range)
       .brushOn(false)
       .compose([
@@ -123,14 +151,16 @@ class bChart {
         .dimension(dim)
         .group(group)
         .elasticY(true)
-        .xUnits(dc.units.fp.precision(parmParm[$('#sndparam option:selected').text()]))
+        .xUnits(dc.units.fp.precision(parmParm[$('#sndparam option:selected').text()].bin))
         .yAxisLabel('# Obs')
         .xAxisLabel($('#sndparam option:selected').text())
         //.centerBar(true)
         //.gap(1)
         //.y(d3.scaleLinear().domain([0,600]))
-        .x(d3.scaleLinear().domain([0,3]));
-        
+        //.x(d3.scaleLinear().domain(parmParm[$('#sndparam option:selected').text()].range));
+        .x(d3.scaleLinear())
+        .elasticX(true);
+
         dcChart.yAxis().ticks(8);
         dcChart.render();
 
@@ -161,7 +191,7 @@ class rChart {
   makeChart(dcChart,dim,group) {
 
     dcChart.width(this.width)
-      .height(0.1*height)
+      .height(0.15*height)
       //.margins(margin)
       .mouseZoomable(false)
       .dimension(dim)
@@ -260,7 +290,7 @@ class tabChart {
           {
             label: 'Value',
             format: d => {
-              return `${d.val}${unit}` 
+              return `${d.val.toFixed(parmParm[$('#sndparam option:selected').text()].dec)} ${unit}` 
             }
           }
         ])
@@ -417,33 +447,33 @@ function updateSample(d,formatter) {
       let row = d3.select('tr.mutable')
 
       row.select('#min')
-        .text(d.data.value.p00.toFixed(2))
+        .text(d.data.value.p00.toFixed(parmParm[$('#sndparam option:selected').text()].dec))
 
       row.select('#amin')
-        .text(d.data.value.p01.toFixed(2))
+        .text(d.data.value.p01.toFixed(parmParm[$('#sndparam option:selected').text()].dec))
 
       row.select('#a10')
-        .text(d.data.value.p10.toFixed(2))
+        .text(d.data.value.p10.toFixed(parmParm[$('#sndparam option:selected').text()].dec))
 
       row.select('#a25')
-        .text(d.data.value.p25.toFixed(2))
+        .text(d.data.value.p25.toFixed(parmParm[$('#sndparam option:selected').text()].dec))
 
       row.select('#amed')
-        .text(d.data.value.p50.toFixed(2))
+        .text(d.data.value.p50.toFixed(parmParm[$('#sndparam option:selected').text()].dec))
 
       row.select('#mean')
-        .text(d.data.value.mean.toFixed(2))
+        .text(d.data.value.mean.toFixed(parmParm[$('#sndparam option:selected').text()].dec))
 
       row.select('#a75')
-        .text(d.data.value.p75.toFixed(2))
+        .text(d.data.value.p75.toFixed(parmParm[$('#sndparam option:selected').text()].dec))
 
       row.select('#a90')
-        .text(d.data.value.p90.toFixed(2))
+        .text(d.data.value.p90.toFixed(parmParm[$('#sndparam option:selected').text()].dec))
 
       row.select('#amax')
-        .text(d.data.value.p99.toFixed(2))
+        .text(d.data.value.p99.toFixed(parmParm[$('#sndparam option:selected').text()].dec))
 
       row.select('#max')
-        .text(d.data.value.p100.toFixed(2))
+        .text(d.data.value.p100.toFixed(parmParm[$('#sndparam option:selected').text()].dec))
 
 }
