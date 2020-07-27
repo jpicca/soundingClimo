@@ -45,6 +45,10 @@ $("#sndparam").on("change", function() {
     $('#filter0').attr('disabled',false);
   }
 
+  // Clear the y-axis input boxes
+  $('#ymax').val('')
+  $('#ymin').val('')
+
   if (parm != "pass") {
 
     loadingFormat();
@@ -57,15 +61,16 @@ $("#sndparam").on("change", function() {
 
 // Change in yaxis values
 $("#ymax, #ymin").on("change", function() {
-  updateYaxisBounds();
-  updateData();
+
+  refreshChart('yaxis');
+
 });
 
 // On moving average change
 $("#movave").on("change", function() {
   updateSmoothPeriod();
   $("#movave").val(dm.smoothPeriod())  // Update displayed value to new period
-  updateData();
+  updateData(false);
 });
 
 // Filter 0s

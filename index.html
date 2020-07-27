@@ -147,18 +147,18 @@
           <option value="TEMP250" unit="C">250 mb Temperature (C)</option>
           <option value="WINDSPD250" unit="kt">250 mb Wind Speed (kt)</option>
           <option value="PASS">---Instability Parameters---</option>
-          <option selected="selected" value="MLCAPE" unit="J/kg">Mixed Layer CAPE (J/kg)</option>
+          <option value="MLCAPE" unit="J/kg">Mixed Layer CAPE (J/kg)</option>
           
           <!-- Bad data exist in ML CIN... values are positive/too large -->
           <!-- <option value="MLCIN" unit="J/kg">Mixed Layer CIN (J/kg)</option> -->
 
-          <option value="MLLCL" unit="m">Mixed Layer LCL (m)</option>
+          <option value="MLLCL" unit="m" disabled>Mixed Layer LCL (m)</option>
 
           <!-- Bad data exist in ML LFC csvs... values do not seem like LFCs (negative values exist) -->
-          <!-- <option value="MLLFC" unit="m">Mixed Layer LFC (m)</option> -->
+          <option value="MLLFC" unit="m" disabled>Mixed Layer LFC (m)</option>
 
           <!-- Bad data in ML LI csvs... these seem like CAPE or some level data -->
-          <!-- <option value="MLLI" unit="C">Mixed Layer LI (C)</option> -->
+          <option value="MLLI" unit="C" disabled>Mixed Layer LI (C)</option>
 
           <option value="MUCAPE" unit="J/kg">Most Unstable CAPE (J/kg)</option>
           <option value="MUCIN" unit="J/kg">Most Unstable CIN (J/kg)</option>
@@ -170,7 +170,10 @@
           <option value="SBLCL" unit="m">Surface Based LCL (m)</option>
           <option value="SBLFC" unit="m">Surface Based LFC (m)</option>
           <option value="SBLI" unit="C">Surface Based LI (C)</option>
-          <option value="CONVTEMP" unit="F">Convective Temperature (F)</option>
+
+          <!-- Bad data... values may be in Celsius...? -->
+          <option value="CONVTEMP" unit="F" disabled>Convective Temperature (F)</option>
+
           <option value="MLCAPE03" unit="J/kg">Mixed Layer 0-3 km CAPE (J/kg)</option>
           <option value="DCAPE" unit="J/kg">Downdraft CAPE (DCAPE) (J/kg)</option>
           <option value="LAPSERATE75" unit="C/km">700-500 mb Lapse Rate (C/km)</option>
@@ -179,23 +182,30 @@
           <option value="LAPSERATE03" unit="C/km">0-3 km AGL Lapse Rate (C/km)</option>
           <option value="PASS">---Kinematic Parameters---</option>
           <option value="SHEAR06" unit="kt">0-6 km AGL Bulk Wind Shear (kt)</option>
-          <option value="SHEAR03" unit="kt">0-3 km AGL Bulk Wind Shear(kt)</option>
+          <option value="SHEAR03" unit="kt">0-3 km AGL Bulk Wind Shear (kt)</option>
           <option value="SHEAR01" unit="kt">0-1 km AGL Bulk Wind Shear (kt)</option>
+          
+          <!-- Not sure why this is disabled... guessing it's a calc thing -->
           <option value="EFF_SRH" unit="m^2/s^2" disabled>Effective SRH (m^2/s^2)</option>
+          
           <option value="SRH03" unit="m^2/s^2">0-3 km SRH (m^2/s^2)</option>
           <option value="SRH01" unit="m^2/s^2">0-1 km SRH (m^2/s^2)</option>
           <option value="SFC_UWND" unit="kt (U Component)">Surface Wind Speed (U component; kt)</option>
           <option value="SFC_VWND" unit="kt (V Component)">Surface Wind Speed (V component; kt)</option>
           <option value="PASS">---Moisture Parameters---</option>
-          <option value="PW" unit="in">Precipitable Water (inches)</option>
+          <option value="PW" unit="in" selected="selected">Precipitable Water (inches)</option>
           <option value="MIXRATIO03KM" unit="g/kg">0-3 km Mixing Ratio (g/kg)</option>
           <option value="MIXRATIO01KM" unit="g/kg">0-1 km Mixing Ratio (g/kg)</option>
           <option value="MIXRATIOSFC850" unit="g/kg">Surface-850 mb Layer Mixing Ratio (g/kg)</option>
-          <option value="SFC_TD" unit="F">Surface Dewpoint (F) </option>
+          <option value="SFC_TD" unit="F">Surface Dewpoint (F)</option>
           <option value="PASS">---Fire Weather Parameters---</option>
           <option value="FOSBERG" unit="">Fosberg Index</option>
+
+          <!-- Way more December observations in RH.... what's going on there? -->
           <option value="SFC_RH" unit="%">Surface Relative Humidity (%)</option>
-          <option value="SFC_T" unit="F">Surface Temperature (F)</option>
+
+          <!-- Units appear to be in celsius -->
+          <option value="SFC_T" unit="F" disabled>Surface Temperature (F)</option>
           <option value="SFCWINDSPD" unit="kt">Surface Wind Speed (kt)</option>
           <option value="PASS">---Other Derived Parameters---</option>
           <option value="STP_FIX" unit="">Fixed-Layer Sig-Tornado Parameter</option>
@@ -203,7 +213,9 @@
           <option value="SCP_EFF" unit="" disabled>Effective-Layer SCP</option>
           <option value="SHIP" unit="">Significant Hail Parameter</option>
           <option value="WBZHEIGHT" unit="ft">Wet Bulb Zero Height (ft)</option>
-          <option value="MELTINGLVL" unit="ft">Melting Level (ft)</option>
+
+          <!-- Values are negative... not sure if they're relative to something else or what -->
+          <option value="MELTINGLVL" unit="ft" disabled>Melting Level (ft)</option>
         </select>
       </div>
       <div class="optionbox" id="raw-vs-filter">
@@ -214,6 +226,43 @@
         <input type="radio" name="dtype" id="filtered" value="filtered" checked />
         <label for="filtered">Filtered</label>
       </div>
+
+      <!-- Custom Plot Dropdown -->
+      <div class="dropdown show optionbox">
+        <a class="btn btn-secondary btn-sm dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Custom Plot Options
+        </a>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+          <div class="dropdown-item">
+            <label for="ymax">Y-Axis Max Value:</label>
+            <input type="text" name="ymax" id="ymax" size="5" />
+          </div>
+          <div class="dropdown-item">
+            <label for="ymin">&nbsp;Y-Axis Min value:</label>
+            <input type="text" name="ymin" id="ymin" size="5" />
+          </div>
+          <div class="dropdown-item">
+            <label for="movave">Moving Average Window:</label>
+            <input type="text" name="movave" id="movave" size="3" value="91"/>
+          </div>
+          <div class="dropdown-item">
+            <label for="dateplot">Only plot moving averages:</label>
+            <input type="checkbox" name="dateplot" id="dateplot" /> 
+          </div>
+          <hr />
+          <div class="dropdown-item">
+            <label for="filterMin">Filter Values Below</label>
+            <input type="text" name="filterMin" id="filterMin" size="5" />
+          </div>
+          <div class="dropdown-item">
+            <label for="filterMax">Filter Values Above</label>
+            <input type="text" name="filterMax" id="filterMax" size="5" />
+          </div>
+          
+        </div>
+      </div>
+
+
       <div class="optionbox" id="latestobs">
         <span class="style5">
           <input type="checkbox" name="observed" id="observed" value="ObsYes" />
@@ -225,7 +274,8 @@
           (Updated 02/14 UTC)
         </span>
       </div>
-      <div class="optionbox">
+      
+      <!-- <div class="optionbox">
         <div class="style5">Custom Plot Options</div>
         <div id="exp1">
           <label for="ymax">Max Value:</label>
@@ -242,7 +292,7 @@
           <label for="filter0">Remove 0's from Thermo Fields</label>
           <br />
         </div>
-      </div>
+      </div> -->
     </nav>
     <main class='col-sm-12'>
       <div id='svg-container' class='col-sm-12'>

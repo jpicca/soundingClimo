@@ -50,6 +50,10 @@ class tsChart {
       min = minVal - buffer;
     }
 
+    // If values are entered in the dropdown for y-axis control, update min/max
+    if ($('#ymin').val()) { min = +$('#ymin').val() }
+    if ($('#ymax').val()) { max = +$('#ymax').val() }
+
     dcChart.width(this.width)
       .height(height*0.65)
       //.height(0.65*this.width)

@@ -165,6 +165,14 @@ async function refreshChart(type) {
       $('#svg-title').text(chart.title);
 
       break;
+    case 'yaxis':
+
+      console.log($('#ymax').val())
+      console.log($('#ymin').val())
+
+      dm.updateTSGroup();
+
+      break;
   }
 
   finishedFormat();
