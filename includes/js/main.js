@@ -93,9 +93,20 @@ async function updateData(init=true) {
   // If it is, filter out vales less than 1 (this will filter out values 0-1 ... prob need to
   // add an entry field to allow for threshold entry)
   
-  if ($('#filter0').is(':checked')) {
-    dm.getZeroFilter().filter(d => { return d > 0 });
+  // if ($('#filter0').is(':checked')) {
+  //   dm.getZeroFilter().filter(d => { return d > 0 });
+  // }
+
+  if ($('#filterMin').val() && $('#filterMax').val()) {
+    dm.getZeroFilter().filter(d => { return (d > $('#filterMin').val() && d < $('#filterMax').val())})
+  } else if ($('#filterMax').val()) {
+    dm.getZeroFilter().filter(d => { return d < $('#filterMax').val()})
+  } else if ($('#filterMin').val()) {
+    dm.getZeroFilter().filter(d => { return d > $('#filterMin').val()})
   }
+
+  //if ($('#filterMin').val()) { dm.getZeroFilter().filter(d => { return d > $('#filterMin').val()})}
+  //if ($('#filterMax').val()) { dm.getZeroFilter().filter(d => { return d < $('#filterMax').val()})}
 
   // Re-create all other charts
   chart2.makeChart(hist,dm.getbarDim(),dm.getbarGroup());
@@ -167,9 +178,7 @@ async function refreshChart(type) {
       break;
     case 'yaxis':
 
-      console.log($('#ymax').val())
-      console.log($('#ymin').val())
-
+      // Logic in make chart will check the yaxis values entered
       dm.updateTSGroup();
 
       break;

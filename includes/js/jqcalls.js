@@ -49,6 +49,10 @@ $("#sndparam").on("change", function() {
   $('#ymax').val('')
   $('#ymin').val('')
 
+  // Clear the filter input boxes
+  $('#filterMin').val('')
+  $('#filterMax').val('')
+
   if (parm != "pass") {
 
     loadingFormat();
@@ -73,6 +77,17 @@ $("#movave").on("change", function() {
   updateData(false);
 });
 
+// Variable filter
+$("#filterMin").on("change", function() {
+  //console.log($("#filterMin").val())
+  updateData(false);
+});
+
+$("#filterMax").on("change", function() {
+  //console.log($("#filterMin").val())
+  updateData(false);
+});
+
 // Filter 0s
 $("#filter0").on("change", function() {
   updateFilter();
@@ -83,13 +98,13 @@ $("#filter0").on("change", function() {
 // Only display moving averages
 $("#dateplot").on("change", function() {
   if ($("#dateplot").prop("checked")) {
-    $("#p00").hide();
-    $("#mean").hide();
-    $("#p100").hide();
+    $(".sub._1").hide();
+    $(".sub._5").hide();
+    $(".sub._8").hide();
   } else {
-    $("#p00").show();
-    $("#mean").show();
-    $("#p100").show();
+    $(".sub._1").show();
+    $(".sub._5").show();
+    $(".sub._8").show();
   };
 });
 

@@ -205,8 +205,12 @@ d3Edge.dataManager = function module() {
         _tvals.forEach(function(p) { if (p.val >  -999.) {tvals.push(p.val); }; });
 
         // Filter 0s from values if criteria is met
-        if (filter0s && $.inArray(soundParm, filter0Fields) > -1) { tvals = tvals.filter(function(p) { return p > 0; })};
+        // if (filter0s && $.inArray(soundParm, filter0Fields) > -1) { tvals = tvals.filter(function(p) { return p > 0; })};
         
+        // Introduce user-variable filtering
+        if ($('#filterMin').val()) { tvals = tvals.filter(d => { return d > $('#filterMin').val() })}
+        if ($('#filterMax').val()) { tvals = tvals.filter(d => { return d < $('#filterMax').val() })}
+
         // When we filter 0s, if there are no values remaining, it will end up pushing "undefined"
         // into the quantile calc. This will break the time series plotting. Soo just tossing in a 0
         // to fix this problem for the time being.
