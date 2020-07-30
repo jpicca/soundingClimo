@@ -129,6 +129,9 @@ async function updateData(init=true) {
 // An async function to simply update charts (not load new data) when time or plot options are changed
 async function refreshChart(type) {
 
+  // Decrease opacity of plots while new data is processing
+  loadingFormat();
+
   switch (type) {
     case 'time' :
       let newTime = +$("#soundingtimes input[type='radio']:checked").val().slice(0,2)
@@ -190,6 +193,7 @@ async function refreshChart(type) {
 
 $(document).ready(function() {
 
+  loadingFormat();
   updateFiltered();
   updateStation();
   updateSoundTime();

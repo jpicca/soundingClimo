@@ -8,6 +8,9 @@ $("area").on("click", function() {
 // Change station via menu
 $("#stn").on("change", function() {
 
+  // Clear any locked/highlighted data
+  clearLock();
+
   // Decrease opacity of plots while new data is processing
   loadingFormat();
 
@@ -18,7 +21,9 @@ $("#stn").on("change", function() {
 // On Time Change
 $("#soundingtimes input[type='radio']").on("change", function() {
 
-  //loadingFormat();
+  // Clear any locked/highlighted data
+  clearLock();
+
   updateSoundTime();
 
   refreshChart('time');
@@ -26,8 +31,13 @@ $("#soundingtimes input[type='radio']").on("change", function() {
 
 // On Filtered Change
 $("#raw-vs-filter input[type='radio']").on("change", function() {
+
+  // Clear any locked/highlighted data
+  clearLock();
+
+  loadingFormat();
   updateFiltered();
-  updateData();
+  updateData(false);
 });
 
 // Change Parameter
@@ -55,6 +65,9 @@ $("#sndparam").on("change", function() {
 
   if (parm != "pass") {
 
+    // Clear any locked/highlighted data
+    clearLock();
+
     loadingFormat();
 
     updateSoundParm();
@@ -66,12 +79,21 @@ $("#sndparam").on("change", function() {
 // Change in yaxis values
 $("#ymax, #ymin").on("change", function() {
 
+  // Clear any locked/highlighted data
+  clearLock();
+
+  loadingFormat();
+
   refreshChart('yaxis');
 
 });
 
 // On moving average change
 $("#movave").on("change", function() {
+
+  // Clear any locked/highlighted data
+  clearLock();
+
   updateSmoothPeriod();
   $("#movave").val(dm.smoothPeriod())  // Update displayed value to new period
   updateData(false);
@@ -79,24 +101,38 @@ $("#movave").on("change", function() {
 
 // Variable filter
 $("#filterMin").on("change", function() {
-  //console.log($("#filterMin").val())
+
+  // Clear any locked/highlighted data
+  clearLock();
+
   updateData(false);
 });
 
 $("#filterMax").on("change", function() {
-  //console.log($("#filterMin").val())
+  
+  // Clear any locked/highlighted data
+  clearLock();
+
   updateData(false);
 });
 
 // Filter 0s
-$("#filter0").on("change", function() {
-  updateFilter();
+// $("#filter0").on("change", function() {
 
-  updateData(false);
-});
+//   // Clear any locked/highlighted data
+//   clearLock();
+
+//   updateFilter();
+
+//   updateData(false);
+// });
 
 // Only display moving averages
 $("#dateplot").on("change", function() {
+
+  // Clear any locked/highlighted data
+  clearLock();
+
   if ($("#dateplot").prop("checked")) {
     $(".sub._1").hide();
     $(".sub._5").hide();

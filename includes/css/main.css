@@ -29,6 +29,10 @@ label { margin-bottom: 0; margin-top: 0;}
 .optionbox {
   text-align: center;
 }
+#line-chart .y-axis-label {
+  /* transform: translate(8rem, 1.3rem); */
+  font-size: 0.8rem;
+}
 
 /* SVG Title */
 #svg-title {
@@ -37,10 +41,10 @@ label { margin-bottom: 0; margin-top: 0;}
 }
 
 /* Main Content Wrapper */
-#contentwrapper { width: 100%; }
+/* #contentwrapper { width: 100%; } */
 
 /* Navigation Bar */
-#secondbar {
+#mainNav {
   padding: 0rem 1rem;
   font-size: 0.8rem;
 }
@@ -128,7 +132,7 @@ label { margin-bottom: 0; margin-top: 0;}
 
 
 /* Main Plot Area */
-main { width: 100%; border: 0.1em solid #DDD; height: 1000px;}
+/* main { width: 100%; border: 0.1em solid #DDD; height: 1000px;} */
 
 #spclogo {
   background-image: url(../imgs/spclogo.jpg);
@@ -289,10 +293,9 @@ main { width: 100%; border: 0.1em solid #DDD; height: 1000px;}
 }
 
 #loading-page {
-  position: fixed;
+  display: none;
   z-index: 100;
   top: 50%;
-  visibility: hidden;
 }
 
 #min-table, #max-table {

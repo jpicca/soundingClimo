@@ -33,7 +33,7 @@ class tsChart {
     let minVal = dm.getbarDim().bottom(1)[0].val
     let maxVal = dm.getbarDim().top(1)[0].val
     let rangeVal = maxVal - minVal;
-    let blankDistCoef = 0.2
+    let blankDistCoef = 0.2;
     let buffer = .01*rangeVal;
     let min;
     let max;
@@ -105,7 +105,9 @@ class tsChart {
       // Use the highlighting function to bind data updating on render/re-draws
       .on('renderlet', () => {
         highlighting();
+
       })
+      // Keep gridline and IQR shading formatted properly before any drawing
       .on('pretransition', () => {
         // Format grid lines (and anything else)
         var hGridlines = d3.select('g.grid-line.horizontal').selectAll('line')
@@ -118,9 +120,36 @@ class tsChart {
         // so manually hiding the lower area to focus on the IQR
         var area2hide = d3.select('path.area')
         area2hide.style('fill-opacity',0)
+
+        var tickLabels = d3.select('#line-chart').select('.axis.x').selectAll('text');
+
+        tickLabels.attr('transform','rotate(30)')
+          .style("text-anchor", "start");
+
+        // Use this d3 label formatting to shrink y-axis tick labels to work with the axis label
+        // the "~" removes insignificant 0s
+        // if (rangeVal > 1000) {
+        //   dcChart.yAxis()
+        //     .tickFormat(d3.format("~s"))
+        // }
+
       })
       .xAxis()
       .tickFormat(d3.timeFormat('%b %d'))
+
+      // Use this d3 label formatting to shrink y-axis tick labels to work with the axis label
+      // the "~" removes insignificant 0s
+      // The formatting is weird for PW, though, so the range check is a workaround.
+      // Also yAxis formatting is not chained because the prior xAxis chained method returns
+      // the axis and not the chart... resulting in not being able to chain dcjs chart methods
+      console.log(rangeVal) 
+      if (rangeVal > 1000) {
+        dcChart.yAxis()
+            .tickFormat(d3.format("~s"))
+      } else {
+        dcChart.yAxis()
+            .tickFormat(d3.format(""))
+      }
 
       dcChart.render();
 
@@ -163,7 +192,9 @@ class bChart {
         //.y(d3.scaleLinear().domain([0,600]))
         //.x(d3.scaleLinear().domain(parmParm[$('#sndparam option:selected').text()].range));
         .x(d3.scaleLinear())
-        .elasticX(true);
+        .elasticX(true)
+        .yAxis()
+        .tickFormat(d3.format("~s"));
 
         dcChart.yAxis().ticks(8);
         dcChart.render();
@@ -208,7 +239,7 @@ class rChart {
       .xAxis()
       .tickFormat(d => { 
         //let date = dateFromDay(2008,d/2);
-        let formatter = d3.timeFormat("%B")
+        let formatter = d3.timeFormat("%b")
         
         return formatter(d)
         //return d
@@ -306,12 +337,12 @@ class tabChart {
 
 function loadingFormat() {
   $("#svg-plot").css("opacity",0.1)
-  $("#loading-page").css("visibility","visible")
+  $("#loading-page").css("display","block")
 }
 
 function finishedFormat() {
   $("#svg-plot").css("opacity",1)
-  $("#loading-page").css("visibility","hidden")
+  $("#loading-page").css("display","none")
 }
 
 function highlighting() {
@@ -365,6 +396,7 @@ function highlighting() {
       // If there are unmutable classes present, that means we have a date selected
       let locked = d3.select('.unmutable').node()
 
+      // In the instance of a new click, it's then OK to run updateSample
       if (locked) {
         d3.selectAll('.unmutable')
           .classed('mutable',true)
@@ -377,13 +409,13 @@ function highlighting() {
         .classed('datetime',false)
 
       // If we click dot, we want to lock date/data on table
-      d3.select('th.mutable')
+      d3.selectAll('.mutable')
         .classed('mutable', false)
         .classed('unmutable', true)
 
-      d3.select('tr.mutable')
-        .classed('mutable', false)
-        .classed('unmutable', true)
+      // d3.select('tr.mutable')
+      //   .classed('mutable', false)
+      //   .classed('unmutable', true)
 
       // Get date from data 
       date = d.data.key;
@@ -428,18 +460,27 @@ function highlighting() {
 
       instruct.select('a')
         .on('click', () => {
-          instruct.html('&nbsp; (Click sampled date to lock data)')
-          d3.selectAll('.datetime')
-            .classed('datetime',false)
-
-          d3.selectAll('.unmutable')
-            .classed('mutable',true)
-            .classed('unmutable',false)
+          clearLock();
         })
       
       
 
     });
+
+}
+
+function clearLock() {
+
+  let instruct = d3.select('#instruction')
+
+  instruct.html('&nbsp; (Click sampled date to lock data)')
+
+  d3.selectAll('.datetime')
+    .classed('datetime',false)
+
+  d3.selectAll('.unmutable')
+    .classed('mutable',true)
+    .classed('unmutable',false)
 
 }
 
