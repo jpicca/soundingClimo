@@ -26,7 +26,18 @@
       <span class="navbar-text">Storm Prediction Center, Norman OK</span>
     </nav>
 
-    <nav class="navbar navbar-expand-md navbar-light bg-light" id="mainNav">
+    <div id='map-container'>
+      <button class="btn btn-secondary" type="button" data-toggle="collapse">
+        <span>Close Map</span>
+      </button>
+      <span id='mapInfo'>
+        Click a point to update station
+      </span>
+      <svg viewBox="0 0 975 610">
+      </svg>
+    </div>
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light" id="mainNav">
       <div style='width: 100%'>
         <!-- <div class="navbar-brand">Options</div> -->
         <button class="navbar-toggler navbar-toggler-right my-1" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
@@ -48,7 +59,7 @@
                 <label for="both">All&nbsp;&nbsp;</label>
               </div>
             </li>
-            <li class="nav-item py-1 px-lg-3">
+            <li class="nav-item py-1 pl-lg-3">
               <div class="optionbox" id="stationselect">
                 <label class="style5" for="stn">Select Station</label>
                 <br />
@@ -76,7 +87,6 @@
                   <option value="DVN">Davenport, IA</option>
                   <option value="LKN">Elko, NV</option>
                   <option value="ELP">El Paso, TX</option>
-                  <option value="DTX">Detroit, MI</option>
                   <option value="FGZ">Flagstaff, AZ</option>
                   <option value="FWD">Fort Worth, TX</option>
                   <option value="APX">Gaylord, MI</option>
@@ -127,6 +137,11 @@
                   <option value="ILN">Wilmington, OH</option>
                   <option value="YUM">Yuma, AZ</option>
                 </select>
+              </div>
+            </li>
+            <li class="nav-item py-1 pr-lg-3">
+              <div style='text-align: center;'>
+                <button id='showMap' class='btn btn-sm btn-link'>Show Map</button>
               </div>
             </li>
             <li class="nav-item py-1 px-lg-3">
@@ -300,9 +315,9 @@
     <main>
       <div id='svg-container' class='col-sm-12'>
         <div id='svg-background'>
-          <div id='map-container' class='col-sm-12'>
+          <!-- <div id='map-container'>
 
-          </div>
+          </div> -->
           <div id='loading-page' class='text-center col-sm-12'>
             <h2><span>Loading/Preparing new data!</span></h2>
           </div>
@@ -397,6 +412,7 @@
   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
   <!-- <script src="includes/js/crossfilter.min.js"></script> -->
   <script src="https://d3js.org/d3.v5.min.js"></script>
+  <script src="https://unpkg.com/topojson@3"></script>
   <!--<script src="includes/js/d3-tip.js"></script> -->
   <script src="https://unpkg.com/crossfilter2@1.5/crossfilter.js"></script>
   <script src="https://unpkg.com/dc@4/dist/dc.js"></script>
@@ -407,5 +423,6 @@
   <script src="includes/js/jqcalls.js"></script>
   <script src="includes/js/parmHelper.js"></script>
   <script src="includes/js/main.js"></script>
+  <script src="includes/js/mapping.js"></script>
 </body>
 </html>

@@ -349,7 +349,7 @@ function highlighting() {
 
   // Set up tooltip
   //let chartGrab = d3.select('#line-chart')
-  let circles = d3.selectAll('circle')
+  let circles = d3.selectAll('.dot')
   let formatter = d3.timeFormat("%b %d (%HZ)")
   let date;
 
@@ -421,8 +421,8 @@ function highlighting() {
       date = d.data.key;
 
       // Get list of elements that meet the data filter
-      let elements = d3.selectAll('circle')
-                        .filter(d => { return d.data.key == date})
+      //let elements = d3.selectAll('circle')
+      //                  .filter(d => { return d.data.key == date})
 
       // Use nodes to grab cx and list of cy's
       // let cx = elements.nodes()[0].getAttribute('cx') + margin.left
@@ -449,7 +449,7 @@ function highlighting() {
       //     .attr('y2',ymax)
       //     .style('stroke','black')
 
-      d3.selectAll('circle')
+      d3.selectAll('.dot')
         .filter(d => { return d.data.key == date})
         .classed('datetime', true)
 

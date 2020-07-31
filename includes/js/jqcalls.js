@@ -6,7 +6,9 @@ $("area").on("click", function() {
 });
 
 // Change station via menu
-$("#stn").on("change", function() {
+$("#stn").on("change", stationChange);
+
+function stationChange() {
 
   // Clear any locked/highlighted data
   clearLock();
@@ -16,7 +18,8 @@ $("#stn").on("change", function() {
 
   updateStation();
   updateData(false);
-});
+
+}
 
 // On Time Change
 $("#soundingtimes input[type='radio']").on("change", function() {
@@ -151,3 +154,12 @@ $("#showinfo").on("click", function() {
 
 // The checkbox for plotting observations is controlled in the main.js file.
 // This is because this routine must be called after the plotObs function is defined.
+
+// Map controls
+$('#map-container button').on("click", () => {
+  $('#map-container').hide();
+})
+
+$('#showMap').on("click", () => {
+  $('#map-container').show();
+})
