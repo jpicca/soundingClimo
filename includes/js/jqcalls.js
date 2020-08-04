@@ -1,10 +1,3 @@
-// Select Map Areas
-$("area").on("click", function() {
-    $("#stn").val($(this).attr("id"));
-    updateStation();
-    updateData();
-});
-
 // Change station via menu
 $("#stn").on("change", stationChange);
 
@@ -15,6 +8,10 @@ function stationChange() {
 
   // Decrease opacity of plots while new data is processing
   loadingFormat();
+
+  // A couple calls to update map formatting
+  d3.select('.selSite').classed('selSite',false);
+  d3.select(`#${$("#stn").val()}`).classed('selSite',true);
 
   updateStation();
   updateData(false);
@@ -119,17 +116,6 @@ $("#filterMax").on("change", function() {
   updateData(false);
 });
 
-// Filter 0s
-// $("#filter0").on("change", function() {
-
-//   // Clear any locked/highlighted data
-//   clearLock();
-
-//   updateFilter();
-
-//   updateData(false);
-// });
-
 // Only display moving averages
 $("#dateplot").on("change", function() {
 
@@ -163,3 +149,8 @@ $('#map-container button').on("click", () => {
 $('#showMap').on("click", () => {
   $('#map-container').show();
 })
+
+// Show Help
+$("#showinfo").on("click", function() {
+  window.open('climoplotinfo.html', 'HELP', "width=800, height=600, top=100, left=300");
+});

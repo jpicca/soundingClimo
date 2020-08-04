@@ -43,12 +43,6 @@ function updateSmoothPeriod() {
 function updateSoundParm() { dm.soundParm($('#sndparam option:selected').val().toLowerCase()); };
 function updateSoundParmUnit() { dm.soundParmUnit($('#sndparam option:selected').attr('unit')); };
 
-// Update the ymin and ymax values in DataManager
-function updateYaxisBounds() {
-  var ymin = $("#ymin").val(); dm.ymin( ymin = (ymin === "") ? 'ymin' : +ymin );
-  var ymax = $("#ymax").val(); dm.ymax( ymax = (ymax === "") ? 'ymax' : +ymax );
-};
-
 // Need to return a resolved promise for async jq call functions
 function updateQuantiles() {
   return new Promise((resolve,reject) => {
@@ -89,14 +83,7 @@ async function updateData(init=true) {
 
   }
 
-  // Check if the 0 filter is turned on
-  // If it is, filter out vales less than 1 (this will filter out values 0-1 ... prob need to
-  // add an entry field to allow for threshold entry)
-  
-  // if ($('#filter0').is(':checked')) {
-  //   dm.getZeroFilter().filter(d => { return d > 0 });
-  // }
-
+  // Filter values if any are specified in the input windows
   if ($('#filterMin').val() && $('#filterMax').val()) {
     dm.getZeroFilter().filter(d => { return (d > $('#filterMin').val() && d < $('#filterMax').val())})
   } else if ($('#filterMax').val()) {
@@ -104,9 +91,6 @@ async function updateData(init=true) {
   } else if ($('#filterMin').val()) {
     dm.getZeroFilter().filter(d => { return d > $('#filterMin').val()})
   }
-
-  //if ($('#filterMin').val()) { dm.getZeroFilter().filter(d => { return d > $('#filterMin').val()})}
-  //if ($('#filterMax').val()) { dm.getZeroFilter().filter(d => { return d < $('#filterMax').val()})}
 
   // Re-create all other charts
   chart2.makeChart(hist,dm.getbarDim(),dm.getbarGroup());
@@ -199,8 +183,6 @@ $(document).ready(function() {
   updateSoundTime();
   updateSoundParm();
   updateSoundParmUnit();
-  //updateSmoothPeriod();
-  updateYaxisBounds();
   updateData();
   
 

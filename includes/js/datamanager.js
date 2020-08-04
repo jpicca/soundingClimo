@@ -1,9 +1,6 @@
 // Data Manager object
 var d3Edge = {};
 
-// ** Global variables for testings **
-var tempXF, tempDim, newGroup;
-
 d3Edge.dataManager = function module() {
 
   var exports = {}, data, raw_data,
@@ -157,17 +154,6 @@ d3Edge.dataManager = function module() {
         
         raw_data = csv_data;
 
-        //console.log(raw_data)
-
-        // Adding the csv data to the crossfilter (not sure if this is 
-        // needed right now)
-        //fdata.add(csv_data);
-      
-        // Get day of year (numbered 1-365(6)) and use it as dimension in filter
-        //doy = fdata.dimension(function(d) { return dateToDay(d.date); });
-        
-        // Also create a dimension based on the type of the record (quantile or raw)
-
         // Resolve promise once d3.csv has data processed
         resolve();
 
@@ -203,9 +189,6 @@ d3Edge.dataManager = function module() {
 
         // *** May be able to make more efficient with another filter, versus looping / pushing ***
         _tvals.forEach(function(p) { if (p.val >  -999.) {tvals.push(p.val); }; });
-
-        // Filter 0s from values if criteria is met
-        // if (filter0s && $.inArray(soundParm, filter0Fields) > -1) { tvals = tvals.filter(function(p) { return p > 0; })};
         
         // Introduce user-variable filtering
         if ($('#filterMin').val()) { tvals = tvals.filter(d => { return d > $('#filterMin').val() })}
@@ -255,7 +238,6 @@ d3Edge.dataManager = function module() {
         q.p100 = qdata.p100[i];
         q.mean = qdata.mean[i];
         q.date = qdata.date[i];
-        q.type = "quantile"
         data.push(q);
       };
 
@@ -263,63 +245,6 @@ d3Edge.dataManager = function module() {
       if (init) {
         exports.createDimsGroups()
       };
-
-      /*
-      // ** Add our data to crossfilter **
-      // Use a filter to only add non-missing data
-      fdata.add(raw_data.filter(d => { return d.val > -999 }));
-      //fdata.groupAll();
-
-      // New dimensions
-      barDim = fdata.dimension(d => d.val)
-      dateIdxDim = fdata.dimension(d => d.idxDate)
-
-      // Create an identical dimension to allow user to filter via sounding time radio button
-      // Charts don't "listen" to their own dimension (to prevent weird actions)
-      userFilterDim = fdata.dimension(d => d.idxDate)
-
-      // ** Make sure to update the parmparm values **
-      binwidth = parmParm[$('#sndparam option:selected').text()]
-
-      // New groups
-      barGroup = barDim.group(d => { return binwidth * Math.floor(d/binwidth)});
-      groupByDateCount = dateIdxDim.group();
-
-      //groupByDay = indexDim.group().reduce(
-      groupByDay = dateIdxDim.group().reduce(
-        (p,v) => {
-          ++p.count
-          p.index = data[v.dayIdx].index
-          p.p00 = data[v.dayIdx].p00
-          p.p01 = data[v.dayIdx].p01
-          p.p10 = data[v.dayIdx].p10
-          p.p25 = data[v.dayIdx].p25
-          p.p50 = data[v.dayIdx].p50
-          p.mean = data[v.dayIdx].mean
-          p.p75 = data[v.dayIdx].p75
-          p.p90 = data[v.dayIdx].p90
-          p.p99 = data[v.dayIdx].p99
-          p.p100 = data[v.dayIdx].p100
-          return p;
-        },
-        (p,v) => {
-          --p.count
-          p.index = data[v.dayIdx].index
-          p.p00 = data[v.dayIdx].p00
-          p.p01 = data[v.dayIdx].p01
-          p.p10 = data[v.dayIdx].p10
-          p.p25 = data[v.dayIdx].p25
-          p.p50 = data[v.dayIdx].p50
-          p.mean = data[v.dayIdx].mean
-          p.p75 = data[v.dayIdx].p75
-          p.p90 = data[v.dayIdx].p90
-          p.p99 = data[v.dayIdx].p99
-          p.p100 = data[v.dayIdx].p100
-          return p;
-        },
-        () => ({count: 0, index:0, p00: 0, p01: 0, p10: 0,
-           p25: 0, p50: 0, mean: 0, p75: 0, p90: 0, p99: 0, p100: 0})
-      ) */
 
       // Resolve promise once quantiles are calculated
       resolve();
@@ -456,7 +381,6 @@ d3Edge.dataManager = function module() {
 
   exports.getXFdata = function () { return fdata; };
   exports.getUserDim = function () { return userFilterDim; };
-  //exports.getindexDim = function () { return indexDim };
   exports.getbarDim = function () { return barDim; };
   exports.getDateIdxDim = function () { return dateIdxDim; };
   exports.getZeroFilter = function () { return zeroFilterDim; }

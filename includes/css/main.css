@@ -4,7 +4,7 @@ header, section, footer, aside, nav, main, article, figure { display: block; }
 
 /* Universal */
 body { background-color: #036; font-family: Arial, Helvetica, sans-serif; }
-a:link { color: #9ACD32; text-decoration: none; }
+a:link { color: rgb(50, 60, 205); text-decoration: none; }
 a:hover { color: #93C; text-decoration: underline; }
 input,select { color: #000; text-align: center; font-size: 10px; }
 label { margin-bottom: 0; margin-top: 0;}
@@ -29,6 +29,20 @@ label { margin-bottom: 0; margin-top: 0;}
 .optionbox {
   text-align: center;
 }
+
+#svg-container::before {
+  background-image: url(../../includes/imgs/spclogo_trans.png);
+  background-size: 75%;
+  position: absolute;
+  top: 12%;
+  right: 0px;
+  background-repeat: no-repeat;
+  bottom: 12%;
+  left: 12%;
+  opacity: 0.05;
+  content: "";
+}
+
 #line-chart .y-axis-label {
   /* transform: translate(8rem, 1.3rem); */
   font-size: 0.8rem;
@@ -36,7 +50,7 @@ label { margin-bottom: 0; margin-top: 0;}
 
 /* SVG Title */
 #svg-title {
-  font-size: 30px;
+  font-size: 2rem;
   font-weight: bold;
 }
 
@@ -51,7 +65,7 @@ label { margin-bottom: 0; margin-top: 0;}
 
 
 /* Left Sidebar */
-#leftsidebar {
+/* #leftsidebar {
   float: left;
   width: 300px;
   margin-right: -100%;
@@ -77,7 +91,7 @@ label { margin-bottom: 0; margin-top: 0;}
   vertical-align: top;
   border: 5px solid white;
   color: white;
-}
+} */
 
 #spcbanner {
   width: 100%;
@@ -151,6 +165,7 @@ label { margin-bottom: 0; margin-top: 0;}
   bottom: 10px;
   width: 70%;
   left: 15%;
+  display: none;
   background-color: white;
   z-index: 200;
   opacity: 0.9;
@@ -192,7 +207,7 @@ label { margin-bottom: 0; margin-top: 0;}
 .area { fill: maroon; fill-opacity: 0.2; }
 
 /* SVG Line/Path Strokes */
-#p00 { stroke: blue; stroke-width: 0.75; }
+/* #p00 { stroke: blue; stroke-width: 0.75; }
 #p01 { stroke: darkblue; stroke-width: 2; }
 #p10 { stroke: #0AA; stroke-width: 2; }
 #p50 { stroke: black; stroke-width: 2; }
@@ -200,22 +215,22 @@ label { margin-bottom: 0; margin-top: 0;}
 #p99 { stroke: darkred; stroke-width: 2; }
 #p100 { stroke: red; stroke-width: 0.75; }
 #mean {stroke: #333; stroke-width: 0.75; }
-#p25, #p75 { stroke: maroon; stroke-width: 2; }
+#p25, #p75 { stroke: maroon; stroke-width: 2; } */
 
 /* SVG Title and Labels */
-#title { font-size: 24px; }
-#yLabel { font-size: 18px; }
+/* #title { font-size: 24px; }
+#yLabel { font-size: 18px; } */
 
 /* SVG Bounding Box */
-#bounding-box { stroke: #000;
+/* #bounding-box { stroke: #000;
   fill: none;
   stroke-width: 2;
   pointer-events: all;
-}
+} */
 
 
 /* Legend */
-#legend {
+/* #legend {
   display: inline-block;
   background-color: #FFF;
   text-align: center;
@@ -225,7 +240,7 @@ label { margin-bottom: 0; margin-top: 0;}
   font-weight: bold;
 }
 
-/* Legend Text */
+/* Legend Text
 #p00L { color: blue; }
 #p01L { color: darkblue; }
 #p10L { color: #0AA; }
@@ -243,7 +258,7 @@ label { margin-bottom: 0; margin-top: 0;}
 
 #por, #por-text { margin: 25px auto 25px auto; text-align: center; font-size: 11px; }
 #por { font-weight: bold; }
-#por-text { font-weight: normal; }
+#por-text { font-weight: normal; } */
 
 
 /* Plotting the Observed Sounding */
@@ -283,7 +298,7 @@ label { margin-bottom: 0; margin-top: 0;}
   animation: blackWhitePulse 1s infinite;
 }
 
-#tooltip {
+/* #tooltip {
   font-size: 8pt;
   font-weight: bold;
   text-align: center;
@@ -291,9 +306,9 @@ label { margin-bottom: 0; margin-top: 0;}
   line-height: 1.5;
 }
 
-#toolval { color: #FF0; }
+#toolval { color: #FF0; } */
 
-.d3-tip {
+/* .d3-tip {
   line-height: 1;
   font-weight: bold;
   padding: 12px;
@@ -302,7 +317,7 @@ label { margin-bottom: 0; margin-top: 0;}
   border-radius: 2px;
 }
 
-/* Creates a small triangle extender for the tooltip */
+/* Creates a small triangle extender for the tooltip
 .d3-tip:after {
   box-sizing: border-box;
   display: inline;
@@ -315,12 +330,12 @@ label { margin-bottom: 0; margin-top: 0;}
   text-align: center;
 }
 
-/* Style northward tooltips differently */
+/* Style northward tooltips differently
 .d3-tip.n:after {
   margin: -1px 0 0 0;
   top: 100%;
   left: 0;
-}
+} */
 
 #loading-page {
   display: none;
@@ -427,7 +442,12 @@ label { margin-bottom: 0; margin-top: 0;}
   font-size: 11px;
 }
 
-/* Used to adjust table size -- bootstrap padding is too big */
+/* Used to adjust table size -- bootstrap default padding is too big */
 .table td, .table th {
   padding: .2rem;
+}
+
+#showinfo {
+  color: white;
+  font-size: 0.7rem;
 }

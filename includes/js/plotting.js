@@ -1,6 +1,8 @@
 var margin = {top: 10, right: 20, bottom: 40, left: 40};
 var height = $(window).height()
 
+// Time series chart
+
 class tsChart {
 
   // Create instance with variables
@@ -20,8 +22,6 @@ class tsChart {
     this.ylabel = ylabel;
     return this;
   }
-
-  // ---------- new makechart -----------
 
   makeChart(dcChart,dim,group) {
 
@@ -56,8 +56,6 @@ class tsChart {
 
     dcChart.width(this.width)
       .height(height*0.65)
-      //.height(0.65*this.width)
-      //.margins(margin)
       .x(d3.scaleTime()
           .domain([new Date(2008, 0, 1, 0), new Date(2009, 0, 1, 12)]))
       .renderHorizontalGridLines(true)
@@ -126,13 +124,6 @@ class tsChart {
         tickLabels.attr('transform','rotate(30)')
           .style("text-anchor", "start");
 
-        // Use this d3 label formatting to shrink y-axis tick labels to work with the axis label
-        // the "~" removes insignificant 0s
-        // if (rangeVal > 1000) {
-        //   dcChart.yAxis()
-        //     .tickFormat(d3.format("~s"))
-        // }
-
       })
       .xAxis()
       .tickFormat(d3.timeFormat('%b %d'))
@@ -142,7 +133,7 @@ class tsChart {
       // The formatting is weird for PW, though, so the range check is a workaround.
       // Also yAxis formatting is not chained because the prior xAxis chained method returns
       // the axis and not the chart... resulting in not being able to chain dcjs chart methods
-      console.log(rangeVal) 
+      
       if (rangeVal > 1000) {
         dcChart.yAxis()
             .tickFormat(d3.format("~s"))
@@ -155,6 +146,8 @@ class tsChart {
 
   }
 }
+
+// Parameter Distribution Bar Chart
 
 class bChart {
 
@@ -187,10 +180,6 @@ class bChart {
         .xUnits(dc.units.fp.precision(parmParm[$('#sndparam option:selected').text()].bin))
         .yAxisLabel('# Obs')
         .xAxisLabel($('#sndparam option:selected').text())
-        //.centerBar(true)
-        //.gap(1)
-        //.y(d3.scaleLinear().domain([0,600]))
-        //.x(d3.scaleLinear().domain(parmParm[$('#sndparam option:selected').text()].range));
         .x(d3.scaleLinear())
         .elasticX(true)
         .yAxis()
@@ -199,10 +188,11 @@ class bChart {
         dcChart.yAxis().ticks(8);
         dcChart.render();
 
-    //dc.renderAll('todo')
   }
 
 }
+
+// Range Chart
 
 class rChart {
 
@@ -227,7 +217,6 @@ class rChart {
 
     dcChart.width(this.width)
       .height(0.15*height)
-      //.margins(margin)
       .mouseZoomable(false)
       .dimension(dim)
       .group(group)
@@ -235,14 +224,13 @@ class rChart {
       .elasticY(true)
       .x(d3.scaleTime()
           .domain([new Date(2008, 0, 1, 0), new Date(2009, 0, 1, 12)]))
-      //.valueAccessor(p => p.value)
       .xAxis()
       .tickFormat(d => { 
-        //let date = dateFromDay(2008,d/2);
+
         let formatter = d3.timeFormat("%b")
         
         return formatter(d)
-        //return d
+
       });
 
       dcChart.yAxis().ticks(3);
@@ -250,40 +238,9 @@ class rChart {
       dcChart.render();
   }
 
-  /* ------ Old makeChart -------
-  makeChart(dcChart,dim,group) {
-
-    dcChart.width(this.width)
-        .height(0.05*this.width)
-        .margins({top: 0, right: 40, bottom: 20, left: 40})
-        .mouseZoomable(false)
-        .dimension(dim)
-        .group(group)
-        .elasticY(true)
-        .x(d3.scaleLinear().domain([1,732]))
-        //.y(d3.scaleLinear().domain([0,100]))
-        //.x(d3.scaleTime()
-        //  .domain([new Date(2008, 0, 1, 0), new Date(2009, 0, 1, 12)]))
-        //.keyAccessor(p => {return dateFromDay(2008,p.key)})
-        .valueAccessor(p => p.value)
-        .xUnits(dc.units.fp.precision(0.5))
-        .xAxis()
-        .tickFormat(d => { 
-          let date = dateFromDay(2008,d/2);
-          let formatter = d3.timeFormat("%B")
-          
-          return formatter(date)
-          //return d
-        })
-        .ticks(12)
-    
-    dcChart.render();
-
-    //dc.renderAll('todo')
-  }
-   ------ old make chart ------- */
-
 }
+
+// Max/Min Tables
 
 class tabChart {
 
@@ -330,11 +287,12 @@ class tabChart {
           }
         ])
         .render();
-        //.data(dim => dim.top(5))
+      
   }
 
 }
 
+// Functions for page transitions/loading/sampling
 function loadingFormat() {
   $("#svg-plot").css("opacity",0.1)
   $("#loading-page").css("display","block")
@@ -348,7 +306,7 @@ function finishedFormat() {
 function highlighting() {
 
   // Set up tooltip
-  //let chartGrab = d3.select('#line-chart')
+  
   let circles = d3.selectAll('.dot')
   let formatter = d3.timeFormat("%b %d (%HZ)")
   let date;
@@ -357,40 +315,7 @@ function highlighting() {
     {
 
       updateSample(d,formatter);
-      /*d3.select('span.mutable')
-        .html(`<b>${formatter(d.data.key)}</b>`)
-
-      let row = d3.select('tr.mutable')
-
-      row.select('#min')
-        .text(d.data.value.p00.toFixed(2))
-
-      row.select('#amin')
-        .text(d.data.value.p01.toFixed(2))
-
-      row.select('#a10')
-        .text(d.data.value.p10.toFixed(2))
-
-      row.select('#a25')
-        .text(d.data.value.p25.toFixed(2))
-
-      row.select('#amed')
-        .text(d.data.value.p50.toFixed(2))
-
-      row.select('#mean')
-        .text(d.data.value.mean.toFixed(2))
-
-      row.select('#a75')
-        .text(d.data.value.p75.toFixed(2))
-
-      row.select('#a90')
-        .text(d.data.value.p90.toFixed(2))
-
-      row.select('#amax')
-        .text(d.data.value.p99.toFixed(2))
-
-      row.select('#max')
-        .text(d.data.value.p100.toFixed(2))*/
+      
     }).on('click', d => {
 
       // If there are unmutable classes present, that means we have a date selected
@@ -413,41 +338,8 @@ function highlighting() {
         .classed('mutable', false)
         .classed('unmutable', true)
 
-      // d3.select('tr.mutable')
-      //   .classed('mutable', false)
-      //   .classed('unmutable', true)
-
       // Get date from data 
       date = d.data.key;
-
-      // Get list of elements that meet the data filter
-      //let elements = d3.selectAll('circle')
-      //                  .filter(d => { return d.data.key == date})
-
-      // Use nodes to grab cx and list of cy's
-      // let cx = elements.nodes()[0].getAttribute('cx') + margin.left
-
-      // let cy = [];
-      // elements.nodes().forEach( entry => {
-      //   cy.push(+entry.getAttribute('cy'))
-      // })
-
-      // console.log(cx)
-
-      // // Take max/min of cy
-      // let ymax = d3.max(cy) + margin.top
-      // let ymin = d3.min(cy) + margin.top
-
-      // // Draw a line on svg representing the day
-      // let svg = d3.select('#line-chart').select('svg')
-      
-      // svg.append('line')
-      //     .classed('dateline',true)
-      //     .attr('x1',cx)
-      //     .attr('x2',cx)
-      //     .attr('y1',ymin)
-      //     .attr('y2',ymax)
-      //     .style('stroke','black')
 
       d3.selectAll('.dot')
         .filter(d => { return d.data.key == date})
@@ -462,8 +354,6 @@ function highlighting() {
         .on('click', () => {
           clearLock();
         })
-      
-      
 
     });
 
