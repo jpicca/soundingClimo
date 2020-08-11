@@ -48,12 +48,12 @@ d3Edge.dataManager = function module() {
   exports.fileName = function(stn, sndparm, filtered) {
     if (!arguments.length) return fileName;
     if (filtered) {
-      fileName = "../soundingclimo.pmarshwx.com/datafiles/" + stn + "/" + stn + "-" + sndparm + "-filtered.csv";
+      fileName = "./datafiles/" + stn + "/" + stn + "-" + sndparm + "-filtered.csv";
     } else {
-      fileName = "../soundingclimo.pmarshwx.com/datafiles/" + stn + "/" + stn + "-" + sndparm + ".csv";
+      fileName = "./datafiles/" + stn + "/" + stn + "-" + sndparm + ".csv";
     }
 
-    console.log(`Filename: ${fileName}`)
+    //console.log(`Filename: ${fileName}`)
     return this;
   };
 
@@ -104,11 +104,11 @@ d3Edge.dataManager = function module() {
 
   exports.readObs = function() {
     if (station.toUpperCase() == "ELP") {
-      var obs_file = "../soundingclimo.pmarshwx.com/obs/EPZ.json";
+      var obs_file = "./obs/EPZ.json";
     } else if (station.toUpperCase() == "RAP") {
-      var obs_file = "../soundingclimo.pmarshwx.com/obs/UNR.json";
+      var obs_file = "./obs/UNR.json";
     } else {
-      var obs_file = "../soundingclimo.pmarshwx.com/obs/" + station.toUpperCase() + ".json";
+      var obs_file = "./obs/" + station.toUpperCase() + ".json";
     }
     // Read obs json file and set obs variable as response
     d3.json(obs_file).then(json_data => {
@@ -121,7 +121,7 @@ d3Edge.dataManager = function module() {
     // Use a promise that resolves once data are loaded
     return new Promise((resolve,reject) => {
 
-      console.log(`readData processing with: ${_file}`)
+      //console.log(`readData processing with: ${_file}`)
       
       fdata = crossfilter();
 
@@ -157,9 +157,12 @@ d3Edge.dataManager = function module() {
         // Resolve promise once d3.csv has data processed
         resolve();
 
+      }).catch(err => {
+        console.log(err);
+        alert('There was an error reading data.')
       });
 
-    })
+    });
     
   };
 

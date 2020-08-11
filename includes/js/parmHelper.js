@@ -22,7 +22,7 @@ var parmParm = {
         dec: 0
     },
     '850 mb Height (m)': {
-        bin: 20,
+        bin: 10,
         dec: 0
     },
     '850 mb Temperature (C)': {
@@ -74,11 +74,11 @@ var parmParm = {
         dec: 1
     },
     '500 mb Mixing Ratio (g/kg)': {
-        bin: 0.25,
+        bin: 0.1,
         dec: 1
     },
     '500 mb Wind Speed (kt)': {
-        bin: 2,
+        bin: 4,
         dec: 0
     },
     '300 mb Height (m)': {
@@ -90,7 +90,7 @@ var parmParm = {
         dec: 1
     },
     '300 mb Wind Speed (kt)': {
-        bin: 5,
+        bin: 4,
         dec: 0
     },
     '250 mb Height (m)': {
@@ -102,7 +102,7 @@ var parmParm = {
         dec: 1
     },
     '250 mb Wind Speed (kt)': {
-        bin: 5,
+        bin: 4,
         dec: 0
     },
     'Mixed Layer CAPE (J/kg)': {
@@ -142,7 +142,7 @@ var parmParm = {
         dec: 0
     },
     'Most Unstable LI (C)': {
-        bin: 0.5,
+        bin: 1,
         dec: 1
     },
     'Surface Based CAPE (J/kg)': {
@@ -162,7 +162,7 @@ var parmParm = {
         dec: 0
     },
     'Surface Based LI (C)': {
-        bin: 0.5,
+        bin: 1,
         dec: 1
     },
     'Convective Temperature (F)': {

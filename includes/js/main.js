@@ -6,6 +6,10 @@ var chart3 = new rChart($("#obs-count").width())
 var chart4 = new tabChart($("#max-table").width())
 var chart5 = new tabChart($("#min-table").width())
 
+// Create a global variable for our hexchart
+// Don't instantiate it until the doc is ready though
+var hexchart;
+
 // Instantiate dc Chart
 //const timeSeries = new dc.LineChart('#line-chart')
 var timeSeries = new dc.CompositeChart('#line-chart')
@@ -20,7 +24,7 @@ function updateFiltered() {
 };
 
 // Update DataManager as to whether 0 values need to be filtered
-function updateFilter() { dm.filter0($("#filter0").prop("checked")); };
+// function updateFilter() { dm.filter0($("#filter0").prop("checked")); };
 
 // Update the DataManager station ID
 function updateStation() { 
@@ -108,6 +112,7 @@ async function updateData(init=true) {
 
   // Return the svg holder to full opacity and hide loading text
   finishedFormat();
+
 };
 
 // An async function to simply update charts (not load new data) when time or plot options are changed
@@ -175,6 +180,18 @@ async function refreshChart(type) {
 
 }
 
+async function updateHex(chart) {
+
+  // Remove any old svg
+  let container = d3.select('#chart-container')
+  let byeSVG = container.select('svg')
+  byeSVG.remove()
+
+  chart.updateParms();
+  await chart.prepData();
+  chart.updateFunctions().makePlot();
+}
+
 $(document).ready(function() {
 
   loadingFormat();
@@ -184,6 +201,19 @@ $(document).ready(function() {
   updateSoundParm();
   updateSoundParmUnit();
   updateData();
+
+  hexchart = new hexChart();
+
+  updateHex(hexchart);
+
+  // Testing of KDE plot
+  /*test = new kdeChart()
   
 
+  async function buildKDE() {
+    await test.prepData()
+    test.updateFunctions().makePlot();
+  }
+
+  buildKDE();*/
 })

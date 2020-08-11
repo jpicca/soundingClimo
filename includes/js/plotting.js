@@ -1,12 +1,36 @@
 var margin = {top: 10, right: 20, bottom: 40, left: 40};
 var height = $(window).height()
 
-// Time series chart
+// Generic chart class
 
-class tsChart {
-
+class chartBase {
   // Create instance with variables
   constructor(width) {
+    this.width = width //- margin.left - margin.right;
+    //this.title = "";
+    //this.ylabel = "";
+  }
+
+  // Set title of chart
+  setTitle(title) {
+    this.title = title;
+    return this;
+  }
+
+  setYLabel(ylabel) {
+    this.ylabel = ylabel;
+    return this;
+  }
+}
+
+// Time series chart
+
+class tsChart extends chartBase {
+
+  constructor(width) { super(width) }
+
+  // Create instance with variables
+  /*constructor(width) {
     this.width = width //- margin.left - margin.right;
     this.title = "";
     this.ylabel = "";
@@ -21,7 +45,7 @@ class tsChart {
   setYLabel(ylabel) {
     this.ylabel = ylabel;
     return this;
-  }
+  }*/
 
   makeChart(dcChart,dim,group) {
 
@@ -149,8 +173,11 @@ class tsChart {
 
 // Parameter Distribution Bar Chart
 
-class bChart {
+class bChart extends chartBase {
 
+  constructor(width) { super(width) }
+
+  /*
   constructor(width) {
     this.width = width // - margin.left - margin.right;
     this.title = "";
@@ -166,7 +193,7 @@ class bChart {
   setYLabel(ylabel) {
     this.ylabel = ylabel;
     return this;
-  }
+  }*/
 
   makeChart(dcChart,dim,group) {
 
@@ -194,8 +221,11 @@ class bChart {
 
 // Range Chart
 
-class rChart {
+class rChart extends chartBase {
 
+  constructor(width) { super(width) }
+
+  /*
   constructor(width) {
     this.width = width;
     this.title = "";
@@ -211,7 +241,7 @@ class rChart {
   setYLabel(ylabel) {
     this.ylabel = ylabel;
     return this;
-  }
+  }*/
 
   makeChart(dcChart,dim,group) {
 
@@ -242,8 +272,11 @@ class rChart {
 
 // Max/Min Tables
 
-class tabChart {
+class tabChart extends chartBase {
 
+  constructor(width) { super(width) }
+
+  /*
   constructor(width) {
     this.width = width;
     this.title = "";
@@ -254,7 +287,7 @@ class tabChart {
   setTitle(title) {
     this.title = title;
     return this;
-  }
+  }*/
 
   makeChart(dcChart,dim,unit,top=true) {
 

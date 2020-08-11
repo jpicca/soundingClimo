@@ -7,6 +7,7 @@ body { background-color: #036; font-family: Arial, Helvetica, sans-serif; }
 a:link { color: rgb(50, 60, 205); text-decoration: none; }
 a:hover { color: #93C; text-decoration: underline; }
 input,select { color: #000; text-align: center; font-size: 10px; }
+select, option { width: 125px; }
 label { margin-bottom: 0; margin-top: 0;}
 
 
@@ -44,7 +45,6 @@ label { margin-bottom: 0; margin-top: 0;}
 }
 
 #line-chart .y-axis-label {
-  /* transform: translate(8rem, 1.3rem); */
   font-size: 0.8rem;
 }
 
@@ -54,46 +54,13 @@ label { margin-bottom: 0; margin-top: 0;}
   font-weight: bold;
 }
 
-/* Main Content Wrapper */
-/* #contentwrapper { width: 100%; } */
-
 /* Navigation Bar */
 #mainNav {
   padding: 0rem 1rem;
   font-size: 0.8rem;
 }
 
-
-/* Left Sidebar */
-/* #leftsidebar {
-  float: left;
-  width: 300px;
-  margin-right: -100%;
-  text-align: left;
-  background-color: #036;
-  padding: 0;
-  overflow: hidden;
-  position: relative;
-  display: inline;
-  vertical-align: top;
-  border: 5px solid white;
-}
-
-#rightsidebar {
-  float: left;
-  width: 300px;
-  text-align: left;
-  background-color: #036;
-  padding: 0;
-  overflow: hidden;
-  position: relative;
-  display: inline;
-  vertical-align: top;
-  border: 5px solid white;
-  color: white;
-} */
-
-#spcbanner {
+/* #spcbanner {
   width: 100%;
   float: left;
   text-align: center;
@@ -106,6 +73,10 @@ label { margin-bottom: 0; margin-top: 0;}
   background-size: 50px, 50px;
   background-repeat: no-repeat;
   background-color: white;
+} */
+
+#hexDat {
+  font-size: 0.8rem;
 }
 
 #plotoptions {
@@ -174,6 +145,20 @@ label { margin-bottom: 0; margin-top: 0;}
   border-width: thick;
 }
 
+#chart-container {
+  position: fixed;
+  bottom: 10px;
+  width: 100%;
+  /* left: 15%; */
+  /* display: none; */
+  background-color: white;
+  z-index: 200;
+  opacity: 0.9;
+  border-style: solid;
+  border-color: black;
+  border-width: thick;
+}
+
 #mapInfo {
   float: right;
   font-size: 0.7rem;
@@ -184,7 +169,8 @@ label { margin-bottom: 0; margin-top: 0;}
   to {opacity: 0.6;}
 }
 
-.selSite {
+.selSite, .selBin {
+  stroke-opacity: 1;
   animation-name: example;
   animation-duration: 1s;
   animation-iteration-count: infinite;
@@ -206,56 +192,7 @@ label { margin-bottom: 0; margin-top: 0;}
 .line { fill: none; }
 .area { fill: maroon; fill-opacity: 0.2; }
 
-/* SVG Line/Path Strokes */
-/* #p00 { stroke: blue; stroke-width: 0.75; }
-#p01 { stroke: darkblue; stroke-width: 2; }
-#p10 { stroke: #0AA; stroke-width: 2; }
-#p50 { stroke: black; stroke-width: 2; }
-#p90 { stroke: orange; stroke-width: 2; }
-#p99 { stroke: darkred; stroke-width: 2; }
-#p100 { stroke: red; stroke-width: 0.75; }
-#mean {stroke: #333; stroke-width: 0.75; }
-#p25, #p75 { stroke: maroon; stroke-width: 2; } */
-
-/* SVG Title and Labels */
-/* #title { font-size: 24px; }
-#yLabel { font-size: 18px; } */
-
-/* SVG Bounding Box */
-/* #bounding-box { stroke: #000;
-  fill: none;
-  stroke-width: 2;
-  pointer-events: all;
-} */
-
-
-/* Legend */
-/* #legend {
-  display: inline-block;
-  background-color: #FFF;
-  text-align: center;
-  width: 100%;
-  height: 100px;
-  margin-bottom: 25px;
-  font-weight: bold;
-}
-
-/* Legend Text
-#p00L { color: blue; }
-#p01L { color: darkblue; }
-#p10L { color: #0AA; }
-#p25L, #p75L { color: maroon; }
-#p50L { color: black; }
-#p90L { color: orange; }
-#p99L { color: darkred; }
-#p100L { color: red; }
-#meanL { color: #333; }
-
-#leg-left { padding-left: 50px; text-align: left; }
-#leg-center { text-align: center; }
-#leg-right { padding-right: 50px; text-align: right; }
-#dateT { font-size: 24px; }
-
+/* 
 #por, #por-text { margin: 25px auto 25px auto; text-align: center; font-size: 11px; }
 #por { font-weight: bold; }
 #por-text { font-weight: normal; } */

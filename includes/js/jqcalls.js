@@ -44,7 +44,7 @@ $("#raw-vs-filter input[type='radio']").on("change", function() {
 $("#sndparam").on("change", function() {
 
   let parm = $('#sndparam option:selected').val().toLowerCase();
-  let canFilter = $.inArray(parm,dm.get0List())
+  /*let canFilter = $.inArray(parm,dm.get0List())
 
   // Only enable the 0 filter checkbox if it's filterable parm
   // and make sure box is unchecked if it's not filterable
@@ -53,7 +53,7 @@ $("#sndparam").on("change", function() {
     $('#filter0').attr('disabled',true);
   } else {
     $('#filter0').attr('disabled',false);
-  }
+  }*/
 
   // Clear the y-axis input boxes
   $('#ymax').val('')
@@ -150,7 +150,27 @@ $('#showMap').on("click", () => {
   $('#map-container').show();
 })
 
+// hex chart controls
+$('#hide-hex').on("click", () => {
+  $('#chart-container').hide();
+})
+
+$('#chartBtn').on("click", () => {
+  $('#chart-container').show();
+})
+
+$('#hex-drop .dropdown-menu').on({
+  "click":function(e) {
+      e.stopPropagation();
+   }
+});
+
 // Show Help
 $("#showinfo").on("click", function() {
   window.open('climoplotinfo.html', 'HELP', "width=800, height=600, top=100, left=300");
 });
+
+// Click update data to change hexbin
+$("#hex-update").on("click", function () {
+  updateHex(hexchart);
+})

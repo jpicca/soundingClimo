@@ -2,8 +2,11 @@
 
 d3.json('./includes/misc/counties-albers-10m.json').then(function(us) {
 
+    // d3 path generator
     var path = d3.geoPath()
     
+    // projection specifically for the svg viewbox and scaling of the geojson file
+    // don't change these numbers, especially the scale factor
     var projection = d3.geoAlbersUsa().scale(1300).translate([487.5, 305])
 
     d3.select('#map-container svg').html(`
@@ -42,9 +45,6 @@ d3.json('./includes/misc/counties-albers-10m.json').then(function(us) {
             .attr("cy",d => projection([d.coordinates[1],d.coordinates[0]])[1])
             
         citypoints.on('click', d => {
-
-            //let selected = d3.select(this)
-            console.log(d.ID)
 
             // Remove animation from prior selected
             d3.select('.selSite').classed('selSite',false);
