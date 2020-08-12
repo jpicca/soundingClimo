@@ -1,3 +1,4 @@
+
 // Change station via menu
 $("#stn").on("change", stationChange);
 
@@ -157,20 +158,25 @@ $('#hide-hex').on("click", () => {
 
 $('#chartBtn').on("click", () => {
   $('#chart-container').show();
-})
+  
+  updateHex(hexchart);
+    
+});
 
+// Stop default action of dropdown closing when clicking on dropdown element
 $('#hex-drop .dropdown-menu').on({
   "click":function(e) {
       e.stopPropagation();
    }
 });
 
+// Click update data to change hexbin
+$("#hex-update").on("click", function () {
+  updateHex(hexchart);
+})
+
 // Show Help
 $("#showinfo").on("click", function() {
   window.open('climoplotinfo.html', 'HELP', "width=800, height=600, top=100, left=300");
 });
 
-// Click update data to change hexbin
-$("#hex-update").on("click", function () {
-  updateHex(hexchart);
-})

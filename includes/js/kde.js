@@ -40,23 +40,37 @@ class hexChart {
                 .then(files => {
                     let data1 = files[0], data2 = files[1];
 
+                    if ($('#x-min').val()) { data1 = data1.filter(d => +d.val > $('#x-min').val())}
+                    if ($('#x-max').val()) { data1 = data1.filter(d => +d.val < $('#x-max').val())}
+
+                    if ($('#y-min').val()) { data2 = data2.filter(d => +d.val > $('#y-min').val())}
+                    if ($('#y-max').val()) { data2 = data2.filter(d => +d.val < $('#y-max').val())}
+
+                    // Filter for missing data and dates before 1965
+                    // Dates before 1965 occasionally have duplicate entries...
+                    // Needs to be fixed upstream
                     data1 = data1.filter(d => +d.val > -9998)
+                    data1 = data1.filter(d => d.date.slice(0,2) > 65)
+
                     data2 = data2.filter(d => +d.val > -9998)
+                    data2 = data2.filter(d => d.date.slice(0,2) > 65)
 
                     let dataMap = {};
-                    let oldDate = 0;
+
                     data1.forEach(entry => { 
-                        if (entry.date == oldDate) {
-                            
-                        }
-                        dataMap[entry.date] = +entry.val 
+
+                        dataMap[entry.date] = +entry.val
+                        
                     });
+
                     data2.forEach(entry => { 
+                        
                         entry.val = +entry.val;
                         entry.val1 = dataMap[entry.date]; 
                     } );
 
-                    this.data = data2;
+                    // Final filter to ensure that we remove undefineds
+                    this.data = data2.filter(d => d.val1);
 
                     resolve();
 
@@ -121,6 +135,8 @@ class hexChart {
 
     makePlot() {
 
+        $('#hexLabel').html(`<b>All ${hexParm.station.toUpperCase()}</b> (Filtered)`)
+
         let color = d3.scaleSequential(d3.interpolateBuPu)
                         .domain([0, d3.max(this.bins, d => d.length) / 1.25])
 
@@ -153,9 +169,9 @@ class hexChart {
                 let centerY = this.y.invert(d.y).toFixed(2);
 
                 d3.select('#hexDat')
-                    .text(`${d.length} obs of ${this.data.length} total
-                        (${(100*d.length/this.data.length).toFixed(2)}%), 
-                        centered on x: ${centerX}, y: ${centerY}`);
+                    .html(`<span><b>${d.length}</b> obs of <b>${this.data.length}</b> total
+                        (<b>${(100*d.length/this.data.length).toFixed(2)}%</b>), 
+                        centered on x: ${centerX}, y: ${centerY}</span>`);
 
                 //d3.select(`path:nth-child(${i})`).classed('selBin',true)
                 // formatting

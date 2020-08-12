@@ -48,7 +48,7 @@
           </button>
         </div>
         <div class="dropdown col-4" id="hex-drop">
-          <button type="button" class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown">
+          <button type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-toggle="dropdown">
             Custom Options
           </button>
           <div class="dropdown-menu">
@@ -155,6 +155,14 @@
                   <option value="MELTINGLVL" unit="ft" disabled>Melting Level (ft)</option>
                 </select>
               </div>
+              <div class="dropdown-item">
+                <label for="x-min">X Min:</label>
+                <input type="text" name="x-min" id="x-min" size="5" />
+              </div>
+              <div class="dropdown-item">
+                <label for="x-max">X Max:</label>
+                <input type="text" name="x-max" id="x-max" size="5" />
+              </div>
               <div class="dropdown-item" id="Yselect">
                 <label class="style5" for="chrtYparam">Y Parameter</label>
                 <br />
@@ -257,6 +265,14 @@
                   <option value="MELTINGLVL" unit="ft" disabled>Melting Level (ft)</option>
                 </select>
               </div>
+              <div class="dropdown-item">
+                <label for="y-min">Y Min:</label>
+                <input type="text" name="y-min" id="y-min" size="5" />
+              </div>
+              <div class="dropdown-item">
+                <label for="y-max">Y Max:</label>
+                <input type="text" name="y-max" id="y-max" size="5" />
+              </div>
             <!-- </div> -->
             <div class='dropdown-item'>
               <button class="btn btn-secondary btn-sm" id='hex-update' type="button">
@@ -271,6 +287,9 @@
         </div>
 
       </div>
+
+      <h1 id='hex-build'>Building Chart, One Moment</h1>
+      <h2 id='hexLabel'>All OUN (Filtered)</h2>
             
       <!-- <svg viewBox="0 0 975 610"> 
       
@@ -511,7 +530,7 @@
                     <input type="text" name="ymax" id="ymax" size="5" />
                   </div>
                   <div class="dropdown-item">
-                    <label for="ymin">&nbsp;Y-Axis Min value:</label>
+                    <label for="ymin">&nbsp;Y-Axis Min Value:</label>
                     <input type="text" name="ymin" id="ymin" size="5" />
                   </div>
                   <div class="dropdown-item">
@@ -536,7 +555,9 @@
               </div>
             </li>
             <li class="nav-item py-1 px-lg-3">
-              <span id='chartBtn'>Open Chart</span>
+              <div style='text-align: center;'>
+                <button id='chartBtn' class='btn btn-sm btn-link'>Bivariate Chart</button>
+              </div>
             </li>
             <!-- <li class="nav-item py-1 px-lg-3">
               <div class="optionbox" id="latestobs">

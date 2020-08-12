@@ -182,6 +182,9 @@ async function refreshChart(type) {
 
 async function updateHex(chart) {
 
+  // Add a 'building' window
+  $('#hex-build').show()
+
   // Remove any old svg
   let container = d3.select('#chart-container')
   let byeSVG = container.select('svg')
@@ -190,6 +193,9 @@ async function updateHex(chart) {
   chart.updateParms();
   await chart.prepData();
   chart.updateFunctions().makePlot();
+
+  // Hide 'building' window
+  $('#hex-build').hide()
 }
 
 $(document).ready(function() {
@@ -204,7 +210,7 @@ $(document).ready(function() {
 
   hexchart = new hexChart();
 
-  updateHex(hexchart);
+  //updateHex(hexchart);
 
   // Testing of KDE plot
   /*test = new kdeChart()
